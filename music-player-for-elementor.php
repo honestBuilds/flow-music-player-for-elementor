@@ -1,7 +1,7 @@
 <?php
 /*
-Plugin Name: Flow Elementor Widgets
-Description: Custom Elementor widgets for Flow Church.
+Plugin Name: Music Player for Elementor
+Description: Music Player for Elementor: MP3 Audio Player & Podcast Player
 Version: 1.0
 Author: Joseph Mills
 */
@@ -19,7 +19,7 @@ if (! defined('ABSPATH')) exit; // Exit if accessed directly
 // add_action('init_get_audio_length', 'get_audio_length');
 // add_action('init', 'get_audio_length');
 
-function flow_elementor_widgets_init()
+function music_player_for_elementor_init()
 {
     // Check if Elementor is activated
     function flow_audio_playlist_is_elementor_active()
@@ -116,6 +116,7 @@ function flow_elementor_widgets_init()
     require_once(__DIR__ . '/cpts/album/album.php');
     require_once(__DIR__ . '/cpts/track/track.php');
     require_once(__DIR__ . '/cpts/cpt-util.php');
+
     add_action('wp_ajax_get_album_cpt_data', 'flow_get_album_cpt_data');
 
     function flow_get_album_cpt_data()
@@ -212,7 +213,7 @@ function flow_elementor_widgets_init()
     add_action('elementor/frontend/before_render', function ($element) {
         if ('loop-grid' === $element->get_name()) {
             $settings = $element->get_settings();
-            error_log("Loop Grid Settings: " . print_r($settings, true));
+            // error_log("Loop Grid Settings: " . print_r($settings, true));
         }
     });
 
@@ -222,4 +223,4 @@ function flow_elementor_widgets_init()
         return $data;
     }, 10, 2);
 }
-add_action('plugins_loaded', 'flow_elementor_widgets_init', 20);
+add_action('plugins_loaded', 'music_player_for_elementor_init', 20);
