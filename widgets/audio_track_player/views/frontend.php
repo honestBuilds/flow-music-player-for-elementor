@@ -52,9 +52,10 @@ $track_metadata_json = json_encode($track_metadata);
 // }
 ?>
 
-<!-- <div class="flow-audio-track-player bg-cover bg-center bg-no-repeat" style="background-image: url('<?php echo esc_url($featured_image); ?>');" data-track-metadata='<?php echo $track_metadata_json; ?>'> -->
+
 <div class="flow-audio-track-player" data-track-metadata='<?php echo $track_metadata_json; ?>'>
     <?php if ($featured_image) : ?>
+        <div class="flow-audio-track-player-background bg-cover bg-center bg-no-repeat" style="background-image: url('<?php echo esc_url($featured_image); ?>');" data-track-metadata='<?php echo $track_metadata_json; ?>'>
         <div class="track-image z-index-1">
             <img src="<?php echo esc_url($featured_image); ?>" alt="<?php echo esc_attr($track_title); ?>">
         </div>
