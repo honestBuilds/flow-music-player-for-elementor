@@ -1,0 +1,10 @@
+.select-track-file {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: 10px;
+}
+
+.track-details-wrapper .select-track-file {
+    margin-top: 10px;
+    display: block;
+}

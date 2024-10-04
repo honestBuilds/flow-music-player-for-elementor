@@ -1,0 +1,114 @@
+/* Remove or comment out the Dashicons import as they're already loaded in WordPress admin */
+@import url('../../wp-includes/css/dashicons.css');
+/* Commented out */
+
+/* Track item */
+.track-item {
+    background: #f9f9f9;
+    border: 1px solid #e1e1e1;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Track header */
+.track-header {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    background: #e9e9e9;
+    padding: 10px;
+    /* font-weight: bold; */
+    border-bottom: 1px solid #ddd;
+}
+
+/* Style the track title */
+.track-header .track-title {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+/* Style the toggle icon */
+.track-header .toggle-icon {
+    font-size: 18px;
+    color: #0073aa;
+    transition: transform 0.2s, color 0.2s;
+}
+
+/* Optional: Rotate the icon when expanded (not needed since icons change direction) */
+/* .track-header .dashicons-arrow-up {
+    transform: rotate(180deg);
+} */
+
+/* Track content */
+.track-content {
+    display: none;
+    padding: 10px;
+}
+
+/* Buttons styling */
+.track-buttons {
+    margin-top: 10px;
+}
+
+.track-buttons .button {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.track-buttons .select-track-file {
+    margin-right: 16px;
+}
+
+.track-item .remove-track {
+    background-color: #dc3545 !important;
+    color: white !important;
+    border: none !important;
+}
+
+/* Make the track file input, track title input, and download link wider */
+.track_file,
+.track-title-input,
+#album_download_link {
+    width: 100%;
+}
+
+.album-tracks-wrapper {
+    margin: 20px 0;
+}
+
+#tracks_container {
+    margin-bottom: 20px;
+}
+
+#track_search {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+#track_search_results {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #e1e1e1;
+    background: white;
+    display: none;
+}
+
+.track-search-result {
+    padding: 10px;
+    border-bottom: 1px solid #e1e1e1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.track-search-result:last-child {
+    border-bottom: none;
+}
+
+#add_new_track {
+    margin-top: 10px;
+}
