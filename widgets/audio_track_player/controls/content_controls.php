@@ -153,19 +153,6 @@ class Track_Player_Content_Controls extends Controls_Manager
             ]
         );
 
-        // Add this control after the 'media_library' control
-        $widget->add_control(
-            'use_blurred_background',
-            [
-                'label' => esc_html__('Use Blurred Background', 'flow-audio'),
-                'type' => Controls_Manager::SWITCHER,
-                'label_on' => esc_html__('Yes', 'flow-audio'),
-                'label_off' => esc_html__('No', 'flow-audio'),
-                'return_value' => 'yes',
-                'default' => 'yes',
-            ]
-        );
-
         $widget->end_controls_section();
     }
 

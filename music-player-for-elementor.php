@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Music Player for Elementor
+Plugin Name: Flow Music Player for Elementor
 Description: Music Player for Elementor: MP3 Audio Player & Podcast Player
 Version: 1.0
 Author: Joseph Mills
