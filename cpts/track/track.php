@@ -49,6 +49,7 @@ function register_track_post_type_and_meta()
     $meta_fields = array(
         'track_url' => array('type' => 'string'),
         'track_download_link' => array('type' => 'string'),
+        'track_external_url' => array('type' => 'string'),
     );
 
     foreach ($meta_fields as $key => $args) {
@@ -86,6 +87,7 @@ function track_details_meta_box_callback($post)
     // Retrieve existing values
     $download_link = get_post_meta($post->ID, 'track_download_link', true);
     $url = get_post_meta($post->ID, 'track_url', true);
+    $track_url = get_post_meta($post->ID, 'track_external_url', true); // New field
 
     echo '<div class="track-details-wrapper">';
 
@@ -95,6 +97,10 @@ function track_details_meta_box_callback($post)
     echo '<p><label for="track_url">' . __('Audio File', 'flow-elementor-widgets') . '</label></p>';
     echo '<input type="url" id="track_url" name="track_url" value="' . esc_attr($url) . '" style="width: 100%;" />';
     echo '<button type="button" class="select-track-file button">' . __('Select File', 'flow-elementor-widgets') . '</button>';
+
+    // New URL field
+    echo '<p><label for="track_external_url">' . __('Track URL', 'flow-elementor-widgets') . '</label></p>';
+    echo '<input type="url" id="track_external_url" name="track_external_url" value="' . esc_attr($track_url) . '" style="width: 100%;" />';
 
     echo '</div>';
 }
@@ -174,9 +180,79 @@ function save_track_meta_box_data($post_id)
     } else {
         delete_post_meta($post_id, 'track_url');
     }
+
+    // Save Track URL
+    if (isset($_POST['track_external_url'])) {
+        $track_url = esc_url_raw($_POST['track_external_url']);
+        update_post_meta($post_id, 'track_external_url', $track_url);
+    } else {
+        delete_post_meta($post_id, 'track_external_url');
+    }
 }
 
 add_action('save_post_track', 'save_track_meta_box_data');
 
 // Artist Taxonomy
 require_once('artist-taxonomy.php');
+
+function add_track_custom_fields_to_elementor($dynamic_tags_manager)
+{
+    class Track_Custom_Field_Tag extends \Elementor\Core\DynamicTags\Tag
+    {
+        public function get_name()
+        {
+            return 'track-custom-field';
+        }
+
+        public function get_title()
+        {
+            return esc_html__('Track Custom Field', 'flow-elementor-widgets');
+        }
+
+        public function get_group()
+        {
+            return 'post';
+        }
+
+        public function get_categories()
+        {
+            return [
+                \Elementor\Modules\DynamicTags\Module::TEXT_CATEGORY,
+                \Elementor\Modules\DynamicTags\Module::URL_CATEGORY,
+            ];
+        }
+
+        protected function register_controls()
+        {
+            $this->add_control(
+                'key',
+                [
+                    'label' => esc_html__('Key', 'flow-elementor-widgets'),
+                    'type' => \Elementor\Controls_Manager::SELECT,
+                    'options' => [
+                        'track_url' => esc_html__('Track Audio File URL', 'flow-elementor-widgets'),
+                        'track_download_link' => esc_html__('Track Download Link', 'flow-elementor-widgets'),
+                        'track_external_url' => esc_html__('Track External URL', 'flow-elementor-widgets'),
+                    ],
+                ]
+            );
+        }
+
+        public function render()
+        {
+            $key = $this->get_settings('key');
+            $post_id = get_the_ID();
+            if ($post_id && $key) {
+                $value = get_post_meta($post_id, $key, true);
+                if (in_array($key, ['track_url', 'track_download_link', 'track_external_url'])) {
+                    echo esc_url($value);
+                } else {
+                    echo wp_kses_post($value);
+                }
+            }
+        }
+    }
+
+    $dynamic_tags_manager->register_tag(new Track_Custom_Field_Tag());
+}
+add_action('elementor/dynamic_tags/register', 'add_track_custom_fields_to_elementor');
