@@ -197,13 +197,3 @@ add_action('save_post_track', 'save_track_meta_box_data');
 
 // Artist Taxonomy
 require_once('artist-taxonomy.php');
-
-
-function add_track_meta_to_elementor_query($query)
-{
-    if (!empty($query->query_vars['post_type']) && $query->query_vars['post_type'] === 'track') {
-        // Remove any meta query restrictions
-        $query->set('meta_query', array());
-    }
-}
-add_action('elementor/query/query_args', 'add_track_meta_to_elementor_query');

@@ -313,13 +313,3 @@ function album_error_log($message)
 
 // Album Artist Taxonomy
 require_once('album-artist-taxonomy.php');
-
-
-// function add_album_meta_to_elementor_query($query)
-// {
-//     if (!empty($query->query_vars['post_type']) && $query->query_vars['post_type'] === 'album') {
-//         // Remove any meta query restrictions
-//         $query->set('meta_query', array());
-//     }
-// }
-// add_action('elementor/query/query_args', 'add_album_meta_to_elementor_query');

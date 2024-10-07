@@ -3,6 +3,8 @@
 namespace Flow_Widgets_For_Elementor\Widgets\Controls;
 
 use Elementor\Controls_Manager;
+use Elementor\Modules\DynamicTags\Module as TagsModule;
+use Elementor\Utils;
 
 /**
  * Controls for the Content section of Elementor panel
@@ -66,9 +68,9 @@ class Track_Player_Content_Controls extends Controls_Manager
             'track_image',
             [
                 'label' => __('Track Image', 'flow-audio'),
-                'type' => \Elementor\Controls_Manager::MEDIA,
+                'type' => Controls_Manager::MEDIA,
                 'default' => [
-                    'url' => \Elementor\Utils::get_placeholder_image_src(),
+                    'url' => Utils::get_placeholder_image_src(),
                 ],
                 'condition' => [
                     'track_source' => 'manual',
@@ -76,7 +78,7 @@ class Track_Player_Content_Controls extends Controls_Manager
                 'dynamic' => [
                     'active' => true,
                     'categories' => [
-                        \Elementor\Modules\DynamicTags\Module::IMAGE_CATEGORY,
+                        TagsModule::IMAGE_CATEGORY,
                     ],
                 ],
             ]

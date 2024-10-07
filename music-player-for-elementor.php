@@ -116,5 +116,6 @@ function music_player_for_elementor_init()
     require_once(__DIR__ . '/cpts/track/track.php');
     require_once(__DIR__ . '/cpts/cpt-util.php');
     require_once(__DIR__ . '/dynamic_tags/dynamic-tags.php');
+    require_once(__DIR__ . '/debug.php');
 }
 add_action('plugins_loaded', 'music_player_for_elementor_init', 20);

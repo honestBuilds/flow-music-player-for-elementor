@@ -34,8 +34,6 @@ class Flow_Audio_Track_Player_Widget extends Widget_Base
         add_action('elementor/frontend/after_enqueue_styles', [$this, 'enqueue_custom_css']);
         add_action('elementor/frontend/after_enqueue_scripts', [$this, 'enqueue_custom_js']);
         add_action('elementor/editor/after_enqueue_styles', [$this, 'enqueue_custom_css']);
-
-        add_action('wp_head', [$this, 'add_viewport_meta']);
     }
 
     public function get_name()
@@ -223,10 +221,5 @@ class Flow_Audio_Track_Player_Widget extends Widget_Base
         ];
 
         return $track_data;
-    }
-
-    public function add_viewport_meta()
-    {
-        echo '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">';
     }
 }
