@@ -1,5 +1,35 @@
 <?php
 
+// Ajax call to get album data
+add_action('wp_ajax_get_album_cpt_data', 'flow_get_album_cpt_data');
+
+function flow_get_album_cpt_data()
+{
+    if (!isset($_POST['album_id'])) {
+        wp_send_json_error('No album ID provided');
+    }
+
+    $album_id = intval($_POST['album_id']);
+    $widget = new Flow_Widgets_For_Elementor\Widgets\Flow_Audio_Playlist_Widget();
+    $album_data = $widget->get_album_cpt_data($album_id);
+
+    if ($album_data) {
+        wp_send_json_success($album_data);
+    } else {
+        wp_send_json_error('Failed to fetch album data');
+    }
+}
+
+// Add cpts to elementor
+function add_cpts_to_elementor($post_types)
+{
+    $post_types['album'] = __('Album', 'flow-elementor-widgets');
+    $post_types['track'] = __('Track', 'flow-elementor-widgets');
+    return $post_types;
+}
+add_filter('elementor/utils/get_public_post_types', 'add_cpts_to_elementor');
+
+// Add thumbnail column to admin table
 function flow_audio_manage_cpt_columns($columns)
 {
     $new_columns = array(

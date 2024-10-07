@@ -10,7 +10,6 @@ Author: Joseph Mills
 
 use Flow_Widgets_For_Elementor\Widgets\Flow_Audio_Playlist_Widget;
 use Flow_Widgets_For_Elementor\Widgets\Flow_Audio_Track_Player_Widget;
-use Flow_Widgets_For_Elementor\Dynamic_Tags\Taxonomy_Image_Dynamic_Tag;
 
 if (! defined('ABSPATH')) exit; // Exit if accessed directly
 
@@ -116,111 +115,6 @@ function music_player_for_elementor_init()
     require_once(__DIR__ . '/cpts/album/album.php');
     require_once(__DIR__ . '/cpts/track/track.php');
     require_once(__DIR__ . '/cpts/cpt-util.php');
-
-    add_action('wp_ajax_get_album_cpt_data', 'flow_get_album_cpt_data');
-
-    function flow_get_album_cpt_data()
-    {
-        if (!isset($_POST['album_id'])) {
-            wp_send_json_error('No album ID provided');
-        }
-
-        $album_id = intval($_POST['album_id']);
-        $widget = new Flow_Widgets_For_Elementor\Widgets\Flow_Audio_Playlist_Widget();
-        $album_data = $widget->get_album_cpt_data($album_id);
-
-        if ($album_data) {
-            wp_send_json_success($album_data);
-        } else {
-            wp_send_json_error('Failed to fetch album data');
-        }
-    }
-
-    // Register the dynamic tag
-    add_action('elementor/dynamic_tags/register', __NAMESPACE__ . '\\register_flow_audio_dynamic_tags');
-
-    // Add this function to register the dynamic tag
-    function register_flow_audio_dynamic_tags($dynamic_tags_manager)
-    {
-        require_once(__DIR__ . '/dynamic_tags/taxonomy-image-dynamic-tag.php');
-        $dynamic_tags_manager->register(new Taxonomy_Image_Dynamic_Tag());
-    }
-
-    // Add this function to register the dynamic tag group
-    function add_flow_audio_dynamic_tags_group($dynamic_tags)
-    {
-        \Elementor\Plugin::$instance->dynamic_tags->register_group(
-            'flow-audio-dynamic-tags',
-            [
-                'title' => esc_html__('Flow Audio', 'flow-elementor-widgets'),
-                'conditions' => [], // Optional: Define conditions if needed
-            ]
-        );
-    }
-    add_action('elementor/dynamic_tags/register_groups', __NAMESPACE__ . '\\add_flow_audio_dynamic_tags_group');
-
-    // Add this function to debug dynamic tags
-    function debug_dynamic_tags_groups($dynamic_tags)
-    {
-        // error_log('Dynamic Tags Groups: ' . print_r($dynamic_tags->get_groups(), true));
-    }
-    add_action('elementor/dynamic_tags/register_groups', 'debug_dynamic_tags_groups', 999);
-
-    // // Add this function to debug dynamic tags
-    // function debug_dynamic_tags($dynamic_tags_manager)
-    // {
-    //     error_log('Dynamic Tags Manager: ' . print_r($dynamic_tags_manager, true));
-    //     // error_log('Registered Dynamic Tags: ' . print_r($dynamic_tags_manager->get_tags(), true));
-    // }
-    // add_action('elementor/dynamic_tags/register', 'debug_dynamic_tags', 999);
-
-    // Add filter to log builder content data
-    add_filter('elementor/frontend/builder_content_data', function ($data, $post_id) {
-        // error_log("Builder content data for post $post_id: " . print_r($data, true));
-
-        // Check if we're in a loop
-        if (isset($data[0]['elements'][0]['elements'])) {
-            foreach ($data[0]['elements'][0]['elements'] as &$element) {
-                if (isset($element['settings']['__dynamic__'])) {
-                    foreach ($element['settings']['__dynamic__'] as &$dynamic_setting) {
-                        if (strpos($dynamic_setting, 'taxonomy-image') !== false) {
-                            // Add loop item data to the dynamic tag
-                            $dynamic_setting = str_replace(']', ', "loop_item": {"id": "{{ID}}"}]', $dynamic_setting);
-                        }
-                    }
-                }
-            }
-        }
-
-        return $data;
-    }, 10, 2);
-
-    // Add filter to log loop grid query args
-    add_filter('elementor/query/query_args', function ($query_args, $widget) {
-        if ('loop-grid' === $widget->get_name()) {
-            // error_log("Loop Grid Query Args: " . print_r($query_args, true));
-        }
-        return $query_args;
-    }, 10, 2);
-
-    // Add this new filter
-    add_filter('elementor/frontend/loop/dynamic_tag_data', function ($data, $tag) {
-        // error_log("Dynamic tag data: " . print_r($data, true));
-        return $data;
-    }, 10, 2);
-
-    // Add this new filter to log loop grid settings
-    add_action('elementor/frontend/before_render', function ($element) {
-        if ('loop-grid' === $element->get_name()) {
-            $settings = $element->get_settings();
-            // error_log("Loop Grid Settings: " . print_r($settings, true));
-        }
-    });
-
-    // Add filter to log builder content data
-    add_filter('elementor/frontend/builder_content_data', function ($data, $post_id) {
-        // error_log("Builder content data for post $post_id: " . print_r($data, true));
-        return $data;
-    }, 10, 2);
+    require_once(__DIR__ . '/dynamic_tags/dynamic-tags.php');
 }
 add_action('plugins_loaded', 'music_player_for_elementor_init', 20);

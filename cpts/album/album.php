@@ -41,6 +41,9 @@ function register_album_post_type_and_meta()
         'hierarchical'       => false,
         'capability_type'    => 'post',
         'exclude_from_search' => false,
+        'show_in_nav_menus' => true,
+        'show_in_admin_bar' => true,
+        'hierarchical' => false,
     );
 
     register_post_type('album', $args);
@@ -311,73 +314,12 @@ function album_error_log($message)
 // Album Artist Taxonomy
 require_once('album-artist-taxonomy.php');
 
-function add_album_custom_fields_to_elementor($dynamic_tags_manager)
-{
-    class Album_Custom_Field_Tag extends \Elementor\Core\DynamicTags\Tag
-    {
-        public function get_name()
-        {
-            return 'album-custom-field';
-        }
 
-        public function get_title()
-        {
-            return esc_html__('Album Custom Field', 'flow-elementor-widgets');
-        }
-
-        public function get_group()
-        {
-            return 'post';
-        }
-
-        public function get_categories()
-        {
-            return [
-                \Elementor\Modules\DynamicTags\Module::TEXT_CATEGORY,
-                \Elementor\Modules\DynamicTags\Module::URL_CATEGORY,
-            ];
-        }
-
-        protected function register_controls()
-        {
-            $this->add_control(
-                'key',
-                [
-                    'label' => esc_html__('Key', 'flow-elementor-widgets'),
-                    'type' => \Elementor\Controls_Manager::SELECT,
-                    'options' => [
-                        'album_year' => esc_html__('Album Release Year', 'flow-elementor-widgets'),
-                        'album_download_link' => esc_html__('Album Download Link', 'flow-elementor-widgets'),
-                        'album_tracks' => esc_html__('Album Tracks', 'flow-elementor-widgets'),
-                    ],
-                ]
-            );
-        }
-
-        public function render()
-        {
-            $key = $this->get_settings('key');
-            $post_id = get_the_ID();
-            if ($post_id && $key) {
-                $value = get_post_meta($post_id, $key, true);
-                if ($key === 'album_download_link') {
-                    echo esc_url($value);
-                } else {
-                    echo wp_kses_post($value);
-                }
-            }
-        }
-    }
-
-    $dynamic_tags_manager->register_tag(new Album_Custom_Field_Tag());
-}
-add_action('elementor/dynamic_tags/register', 'add_album_custom_fields_to_elementor');
-
-function add_album_meta_to_elementor_query($query)
-{
-    if (!empty($query->query_vars['post_type']) && $query->query_vars['post_type'] === 'album') {
-        $query->set('meta_key', '');
-        $query->set('meta_value', '');
-    }
-}
-add_action('elementor/query/query_args', 'add_album_meta_to_elementor_query');
+// function add_album_meta_to_elementor_query($query)
+// {
+//     if (!empty($query->query_vars['post_type']) && $query->query_vars['post_type'] === 'album') {
+//         // Remove any meta query restrictions
+//         $query->set('meta_query', array());
+//     }
+// }
+// add_action('elementor/query/query_args', 'add_album_meta_to_elementor_query');

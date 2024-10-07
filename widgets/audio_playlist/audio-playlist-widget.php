@@ -269,7 +269,6 @@ class Flow_Audio_Playlist_Widget extends Widget_Base
 
     private function get_album_cpt_data($album_id)
     {
-        error_log("Getting album data for ID: " . $album_id);
 
         $album = get_post($album_id);
         if (!$album) {
@@ -281,7 +280,7 @@ class Flow_Audio_Playlist_Widget extends Widget_Base
         $album_artist = !empty($album_artists) ? $album_artists[0]->name : '';
 
         $tracks = get_post_meta($album_id, 'album_tracks', true);
-        error_log("Raw tracks data: " . print_r($tracks, true));
+        // error_log("Raw tracks data: " . print_r($tracks, true));
 
         $formatted_tracks = [];
         $total_dur_secs = 0;
@@ -323,7 +322,7 @@ class Flow_Audio_Playlist_Widget extends Widget_Base
             'download_link' => get_post_meta($album_id, 'album_download_link', true),
         ];
 
-        error_log("Formatted album data: " . print_r($album_data, true));
+        // error_log("Formatted album data: " . print_r($album_data, true));
 
         return $album_data;
     }

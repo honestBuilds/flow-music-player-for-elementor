@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-class Taxonomy_Image_Dynamic_Tag extends \Elementor\Core\DynamicTags\Data_Tag
+class Taxonomy_Image_Dynamic_Tag extends Data_Tag
 {
     public function get_name()
     {
@@ -23,12 +23,12 @@ class Taxonomy_Image_Dynamic_Tag extends \Elementor\Core\DynamicTags\Data_Tag
 
     public function get_group()
     {
-        return 'media';
+        return 'fmp-dynamic-tags-group';
     }
 
     public function get_categories()
     {
-        return [\Elementor\Modules\DynamicTags\Module::IMAGE_CATEGORY];
+        return [TagsModule::IMAGE_CATEGORY];
     }
 
     protected function register_controls()

@@ -41,6 +41,9 @@ function register_track_post_type_and_meta()
         'hierarchical'       => false,
         'capability_type'    => 'post',
         'exclude_from_search' => false,
+        'show_in_nav_menus' => true,
+        'hierarchical' => false,
+        'show_in_admin_bar' => true,
     );
 
     register_post_type('track', $args);
@@ -195,64 +198,12 @@ add_action('save_post_track', 'save_track_meta_box_data');
 // Artist Taxonomy
 require_once('artist-taxonomy.php');
 
-function add_track_custom_fields_to_elementor($dynamic_tags_manager)
+
+function add_track_meta_to_elementor_query($query)
 {
-    class Track_Custom_Field_Tag extends \Elementor\Core\DynamicTags\Tag
-    {
-        public function get_name()
-        {
-            return 'track-custom-field';
-        }
-
-        public function get_title()
-        {
-            return esc_html__('Track Custom Field', 'flow-elementor-widgets');
-        }
-
-        public function get_group()
-        {
-            return 'post';
-        }
-
-        public function get_categories()
-        {
-            return [
-                \Elementor\Modules\DynamicTags\Module::TEXT_CATEGORY,
-                \Elementor\Modules\DynamicTags\Module::URL_CATEGORY,
-            ];
-        }
-
-        protected function register_controls()
-        {
-            $this->add_control(
-                'key',
-                [
-                    'label' => esc_html__('Key', 'flow-elementor-widgets'),
-                    'type' => \Elementor\Controls_Manager::SELECT,
-                    'options' => [
-                        'track_url' => esc_html__('Track Audio File URL', 'flow-elementor-widgets'),
-                        'track_download_link' => esc_html__('Track Download Link', 'flow-elementor-widgets'),
-                        'track_external_url' => esc_html__('Track External URL', 'flow-elementor-widgets'),
-                    ],
-                ]
-            );
-        }
-
-        public function render()
-        {
-            $key = $this->get_settings('key');
-            $post_id = get_the_ID();
-            if ($post_id && $key) {
-                $value = get_post_meta($post_id, $key, true);
-                if (in_array($key, ['track_url', 'track_download_link', 'track_external_url'])) {
-                    echo esc_url($value);
-                } else {
-                    echo wp_kses_post($value);
-                }
-            }
-        }
+    if (!empty($query->query_vars['post_type']) && $query->query_vars['post_type'] === 'track') {
+        // Remove any meta query restrictions
+        $query->set('meta_query', array());
     }
-
-    $dynamic_tags_manager->register_tag(new Track_Custom_Field_Tag());
 }
-add_action('elementor/dynamic_tags/register', 'add_track_custom_fields_to_elementor');
+add_action('elementor/query/query_args', 'add_track_meta_to_elementor_query');
