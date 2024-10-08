@@ -41,7 +41,7 @@ use Elementor\Plugin;
         style="background-image: url('<?php echo esc_url($cover_art_url); ?>');"></div>
 
     <!-- Main Container -->
-    <div class="container mx-auto px-4 py-8 relative z-10">
+    <div class="container mx-auto py-8 relative z-10">
         <div class="flex flex-col md:flex-row">
             <!-- Cover and Info -->
             <div id="cover" class="md:w-2/5 mb-8 md:mb-0 text-center md:sticky md:top-8 md:self-start">
@@ -112,7 +112,7 @@ use Elementor\Plugin;
                                     <?php if ($show_track_numbers === 'yes'): ?>
                                         <span class="font-semibold track-number"><?php echo esc_html($track['track_number'] ?? ''); ?></span>
                                     <?php endif; ?>
-                                    <span class="ml-4 album-track-title"><?php echo esc_html($track['track_title'] ?? ''); ?></span>
+                                    <span class="album-track-title"><?php echo esc_html($track['track_title'] ?? ''); ?></span>
                                 </div>
                                 <span class="track-duration"><?php echo esc_html($track['track_duration_formatted'] ?? ''); ?></span>
                             </li>
