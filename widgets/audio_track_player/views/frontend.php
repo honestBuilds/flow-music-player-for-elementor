@@ -78,6 +78,5 @@ $track_metadata_json = json_encode($track_metadata);
             </div>
             <div class="duration"><?php echo esc_html($track_duration); ?></div>
         </div>
-        <audio src="<?php echo esc_url($track_url); ?>"></audio>
     </div>
 </div>
