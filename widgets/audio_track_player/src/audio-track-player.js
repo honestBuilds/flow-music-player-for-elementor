@@ -1,7 +1,8 @@
 class AudioTrackPlayer {
     constructor(element) {
         this.element = element;
-        this.audio = this.element.querySelector('audio');
+        this.audioSrc = this.element.dataset.audioSrc;
+        this.audio = null;
         this.playPauseBtn = this.element.querySelector('.play-pause-btn');
         this.progressBar = this.element.querySelector('.progress-bar');
         this.progressFill = this.element.querySelector('.progress-fill');
@@ -11,25 +12,32 @@ class AudioTrackPlayer {
         this.trackMetadata = JSON.parse(this.element.dataset.trackMetadata);
 
         this.bindEvents();
-        this.updateDuration();
     }
 
     bindEvents() {
         this.playPauseBtn.addEventListener('click', () => this.togglePlayPause());
-        this.audio.addEventListener('timeupdate', () => this.updateProgress());
-        this.audio.addEventListener('ended', () => this.onEnded());
-        this.audio.addEventListener('play', () => {
-            globalAudioManager.setCurrentPlayer(this);
-            this.updatePlayPauseButton(true);
-            this.updateMediaSessionMetadata();
-        });
-        this.audio.addEventListener('pause', () => {
-            this.updatePlayPauseButton(false);
-        });
         this.progressBar.addEventListener('click', (e) => this.seek(e));
     }
 
+    initAudio() {
+        if (!this.audio) {
+            this.audio = new Audio(this.audioSrc);
+            this.audio.addEventListener('timeupdate', () => this.updateProgress());
+            this.audio.addEventListener('ended', () => this.onEnded());
+            this.audio.addEventListener('loadedmetadata', () => this.updateDuration());
+            this.audio.addEventListener('play', () => {
+                globalAudioManager.setCurrentPlayer(this);
+                this.updatePlayPauseButton(true);
+                this.updateMediaSessionMetadata();
+            });
+            this.audio.addEventListener('pause', () => {
+                this.updatePlayPauseButton(false);
+            });
+        }
+    }
+
     togglePlayPause() {
+        this.initAudio();
         if (this.audio.paused) {
             globalAudioManager.setCurrentPlayer(this);
             this.audio.play();
@@ -39,7 +47,9 @@ class AudioTrackPlayer {
     }
 
     pause() {
-        this.audio.pause();
+        if (this.audio) {
+            this.audio.pause();
+        }
     }
 
     updatePlayPauseButton(isPlaying) {
@@ -56,8 +66,10 @@ class AudioTrackPlayer {
     }
 
     seek(e) {
-        const percent = e.offsetX / this.progressBar.offsetWidth;
-        this.audio.currentTime = percent * this.audio.duration;
+        if (this.audio) {
+            const percent = e.offsetX / this.progressBar.offsetWidth;
+            this.audio.currentTime = percent * this.audio.duration;
+        }
     }
 
     onEnded() {
@@ -66,10 +78,8 @@ class AudioTrackPlayer {
     }
 
     updateDuration() {
-        this.audio.addEventListener('loadedmetadata', () => {
-            const duration = this.formatTime(this.audio.duration);
-            this.durationElement.textContent = duration;
-        });
+        const duration = this.formatTime(this.audio.duration);
+        this.durationElement.textContent = duration;
     }
 
     formatTime(seconds) {
@@ -82,7 +92,7 @@ class AudioTrackPlayer {
         if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: this.trackMetadata.track_title,
-                artist: this.trackMetadata.track_artist, // This now includes "First Love Music ft. " if applicable
+                artist: this.trackMetadata.track_artist,
                 album: this.trackMetadata.album_title,
                 artwork: [
                     { src: this.trackMetadata.featured_image_url, sizes: '512x512', type: 'image/jpeg' }

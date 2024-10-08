@@ -53,7 +53,7 @@ $track_metadata_json = json_encode($track_metadata);
 ?>
 
 
-<div class="flow-audio-track-player" data-track-metadata='<?php echo $track_metadata_json; ?>'>
+<div class="flow-audio-track-player" data-track-metadata='<?php echo $track_metadata_json; ?>' data-audio-src="<?php echo esc_url($track_url); ?>">
     <?php if ($featured_image) : ?>
         <?php if ($use_blurred_background) : ?>
             <div class="flow-audio-track-player-background bg-cover bg-center bg-no-repeat" style="background-image: url('<?php echo esc_url($featured_image); ?>');"></div>
