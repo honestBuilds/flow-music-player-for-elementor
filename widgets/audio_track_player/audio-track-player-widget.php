@@ -174,6 +174,8 @@ class Flow_Audio_Track_Player_Widget extends Widget_Base
 
         $track_title = $track->post_title;
         $track_url = get_post_meta($track_id, 'track_url', true);
+        $track_external_url = get_post_meta($track_id, 'track_external_url', true);
+        $track_download_link = get_post_meta($track_id, 'track_download_link', true);
         $track_attachment_id = attachment_url_to_postid($track_url) ?? 0;
         $track_duration_secs = get_audio_length($track_attachment_id);
         $track_duration_formatted = format_audio_duration($track_duration_secs);
@@ -187,11 +189,13 @@ class Flow_Audio_Track_Player_Widget extends Widget_Base
         $track_data = [
             'track_title' => $track_title,
             'track_url' => $track_url,
+            'track_external_url' => $track_external_url,
             'track_attachment_id' => $track_attachment_id,
             'track_duration_secs' => $track_duration_secs,
             'track_duration_formatted' => $track_duration_formatted,
             'track_artist' => $track_artist,
             'featured_image_url' => $featured_image_url, // Add the featured image URL
+            'track_download_link' => $track_download_link,
         ];
 
         return $track_data;
@@ -202,6 +206,8 @@ class Flow_Audio_Track_Player_Widget extends Widget_Base
         $track_artist = $settings['track_artist'];
         $track_title = $settings['track_title'];
         $track_url = $settings['media_library']['url'];
+        $track_external_url = $settings['track_external_url'];
+        $track_download_link = $settings['track_download_link'];
         $track_attachment_id = attachment_url_to_postid($track_url) ?? 0;
         $track_duration_secs = get_audio_length($track_attachment_id);
         $track_duration_formatted = format_audio_duration($track_duration_secs);
@@ -213,11 +219,13 @@ class Flow_Audio_Track_Player_Widget extends Widget_Base
         $track_data = [
             'track_title' => $track_title,
             'track_url' => $track_url,
+            'track_external_url' => $track_external_url,
             'track_attachment_id' => $track_attachment_id,
             'track_duration_secs' => $track_duration_secs,
             'track_duration_formatted' => $track_duration_formatted,
             'track_artist' => $track_artist,
             'featured_image_url' => $settings['track_image']['url'] ?? plugins_url('assets/img/placeholder.webp', __FILE__), // Add this line
+            'track_download_link' => $track_download_link,
         ];
 
         return $track_data;

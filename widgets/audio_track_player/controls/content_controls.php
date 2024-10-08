@@ -154,6 +154,48 @@ class Track_Player_Content_Controls extends Controls_Manager
                 ],
             ]
         );
+        // Track External Link Control
+        $widget->add_control(
+            'track_external_url',
+            [
+                'label' => esc_html__('Track External Link', 'flow-audio'),
+                'type' => Controls_Manager::URL,
+                'placeholder' => esc_html__('Paste or type URL', 'flow-audio'),
+                'options' => ['is_external', 'nofollow'],
+                'default' => [
+                    'url' => '',
+                    'is_external' => true,
+                    'nofollow' => true,
+                ],
+                'dynamic' => [
+                    'active' => true, // Enable dynamic tags
+                ],
+                'condition' => [
+                    'album_source' => 'manual',
+                ],
+            ]
+        );
+
+        $widget->add_control(
+            'track_download_link',
+            [
+                'label' => esc_html__('Download Link', 'flow-audio'),
+                'type' => Controls_Manager::URL,
+                'placeholder' => esc_html__('Paste or type URL', 'flow-audio'),
+                'options' => ['is_external', 'nofollow'],
+                'default' => [
+                    'url' => '',
+                    'is_external' => true,
+                    'nofollow' => true,
+                ],
+                'dynamic' => [
+                    'active' => true, // Enable dynamic tags
+                ],
+                'condition' => [
+                    'album_source' => 'manual',
+                ],
+            ]
+        );
 
         $widget->end_controls_section();
     }

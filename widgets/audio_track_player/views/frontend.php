@@ -13,6 +13,8 @@ $track_title = $track_data['track_title'];
 $track_artist = $track_data['track_artist'];
 $track_url = $track_data['track_url'];
 $track_duration = $track_data['track_duration_formatted'];
+$track_external_url = $track_data['track_external_url'];
+$track_download_link = $track_data['track_download_link'];
 
 $featured_image = '';
 if ($settings['track_source'] === 'track_cpt') {
@@ -58,11 +60,20 @@ $track_metadata_json = json_encode($track_metadata);
         <?php if ($use_blurred_background) : ?>
             <div class="flow-audio-track-player-background bg-cover bg-center bg-no-repeat" style="background-image: url('<?php echo esc_url($featured_image); ?>');"></div>
         <?php endif; ?>
-        <div class="track-image z-index-1">
-            <img src="<?php echo esc_url($featured_image); ?>" alt="<?php echo esc_attr($track_title); ?>">
-        </div>
+
+        <?php if (isset($track_external_url) && !empty($track_external_url)) : ?>
+            <a href="<?php echo esc_url($track_external_url); ?>" target="_blank" class="track-image-link">
+            <?php endif; ?>
+
+            <div class="track-image z-index-10">
+                <img src="<?php echo esc_url($featured_image); ?>" alt="<?php echo esc_attr($track_title); ?>">
+            </div>
+
+            <?php if (isset($track_external_url) && !empty($track_external_url)) : ?>
+            </a>
+        <?php endif; ?>
     <?php endif; ?>
-    <div class="track-content z-index-1">
+    <div class="track-content z-index-10">
         <div class="track-info">
             <div class="track-details">
                 <div class="track-title"><?php echo esc_html($track_title); ?></div>
