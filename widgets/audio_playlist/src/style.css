@@ -25,6 +25,14 @@ img {
     text-overflow: ellipsis;
 }
 
+.download-link {
+    color: white;
+}
+
+.download-link:hover {
+    color: white;
+}
+
 #songList {
     padding-bottom: 64px;
 }

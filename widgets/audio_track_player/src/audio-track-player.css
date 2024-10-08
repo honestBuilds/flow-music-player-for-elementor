@@ -158,8 +158,37 @@
 .duration {
     font-size: 12px;
     color: #474747;
-    text-align: right;
+    text-align: left;
     /* margin-top: 5px; */
+}
+
+.duration-share-download-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.share-download-container {
+    display: flex;
+    /* gap is now controlled by Elementor */
+}
+
+.download-link,
+.share-link {
+    text-decoration: none;
+    transition: color 0.3s ease;
+    /* Color and typography are now controlled by Elementor */
+}
+
+/* Remove the hover styles from here as they're now controlled by Elementor */
+
+@media (min-width: 480px) {
+
+    .download-link,
+    .share-link {
+        font-size: 16px;
+    }
 }
 
 /* Add a media query for larger screens */
@@ -198,6 +227,15 @@
         margin-left: -9px;
         margin-top: -4px;
         /* Further reduce space for larger screens */
+    }
+
+    .share-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    .share-btn::before {
+        font-size: 18px;
     }
 }
 

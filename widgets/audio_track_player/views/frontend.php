@@ -87,7 +87,16 @@ $track_metadata_json = json_encode($track_metadata);
                     <div class="progress-fill"></div>
                 </div>
             </div>
-            <div class="duration"><?php echo esc_html($track_duration); ?></div>
+            <div class="duration-share-download-container">
+                <div class="duration"><?php echo esc_html($track_duration); ?></div>
+                <div class="share-download-container elementor-widget-container">
+                    <?php if (isset($track_download_link) && !empty($track_download_link)) : ?>
+                        <a href="<?php echo esc_url($track_download_link); ?>" target="_blank" class="download-link elementor-button-link">Download</a>
+                    <?php endif; ?>
+                    <a href="<?php echo esc_url(get_permalink()); ?>" class="share-link elementor-button-link" data-track-title="<?php echo esc_attr($track_title); ?>" data-track-artist="<?php echo esc_attr($track_artist); ?>">Share</a>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

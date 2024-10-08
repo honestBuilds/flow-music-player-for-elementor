@@ -7,7 +7,8 @@ class AudioTrackPlayer {
         this.progressBar = this.element.querySelector('.progress-bar');
         this.progressFill = this.element.querySelector('.progress-fill');
         this.durationElement = this.element.querySelector('.duration');
-
+        this.shareLink = this.element.querySelector('.share-link');
+        this.downloadLink = this.element.querySelector('.download-link');
         // Parse the track metadata
         this.trackMetadata = JSON.parse(this.element.dataset.trackMetadata);
 
@@ -17,6 +18,7 @@ class AudioTrackPlayer {
     bindEvents() {
         this.playPauseBtn.addEventListener('click', () => this.togglePlayPause());
         this.progressBar.addEventListener('click', (e) => this.seek(e));
+        this.shareLink.addEventListener('click', (e) => this.shareTrack(e));
     }
 
     initAudio() {
@@ -99,6 +101,46 @@ class AudioTrackPlayer {
                 ]
             });
         }
+    }
+
+    shareTrack(e) {
+        e.preventDefault(); // Prevent the default link behavior
+
+        const title = this.shareLink.dataset.trackTitle;
+        const artist = this.shareLink.dataset.trackArtist;
+        const url = this.shareLink.href;
+        const shareText = artist ? `Listen to "${title}" by First Love Music ft. ${artist}` : `Listen to "${title}" by First Love Music`;
+        const shareTitle = artist ? `${title} by First Love Music ft. ${artist}` : `${title} by First Love Music`;
+
+        if (navigator.share) {
+            navigator.share({
+                title: shareTitle,
+                text: shareText,
+                url: url
+            }).then(() => {
+                console.log('Successfully shared');
+            }).catch((error) => {
+                console.error('Error sharing:', error);
+                this.fallbackShare(title, artist, url);
+            });
+        } else {
+            this.fallbackShare(title, artist, url);
+        }
+    }
+
+    fallbackShare(title, artist, url) {
+        const shareText = `Check out "${title}" by ${artist}: ${url}`;
+        const textArea = document.createElement('textarea');
+        textArea.value = shareText;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            alert('Share link copied to clipboard!');
+        } catch (err) {
+            console.error('Failed to copy: ', err);
+        }
+        document.body.removeChild(textArea);
     }
 }
 

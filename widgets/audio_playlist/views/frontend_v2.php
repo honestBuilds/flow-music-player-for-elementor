@@ -54,6 +54,7 @@ use Elementor\Plugin;
                 <p class="text-gray-400 album-info no-mbe"><?php echo esc_html(ucfirst($playlist_type)) .  (empty($playlist_year) ? '' : ' • ' . esc_html($playlist_year)); ?></p>
                 <?php
                 $track_count = is_array($tracks_arr) ? count($tracks_arr) : 0;
+                $count_unit = $track_count === 1 ? substr($count_unit, 0, -1) : $count_unit; // handle plural or singular
                 $track_info = $track_count > 0 ? $track_count . ' ' . esc_html($count_unit) . ' • ' . esc_html($total_duration) : 'No tracks';
                 ?>
                 <p class="text-gray-400 album-stats no-mbe"><?php echo $track_info; ?></p>
@@ -61,7 +62,7 @@ use Elementor\Plugin;
                 <!-- Controls -->
                 <div class="flex space-x-4 mt-4 justify-center items-center">
                     <!-- Download Button -->
-                    <a href="<?php echo $download_link ? esc_url($download_link) : '#'; ?>" class="bg-gray-800 p-2 rounded-full text-white" target="<?php echo $download_link ? '_blank' : '_self'; ?>" rel="noopener noreferrer">
+                    <a href="<?php echo $download_link ? esc_url($download_link) : '#'; ?>" class="download-link bg-gray-800 p-2 rounded-full text-white" target="<?php echo $download_link ? '_blank' : '_self'; ?>" rel="noopener noreferrer">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

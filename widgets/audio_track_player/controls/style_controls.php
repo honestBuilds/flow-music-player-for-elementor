@@ -202,5 +202,177 @@ class Track_Player_Style_Controls extends Controls_Manager
         );
 
         $widget->end_controls_section();
+
+        $widget->start_controls_section(
+            'download_share_style_section',
+            [
+                'label' => esc_html__('Download & Share', 'flow-audio'),
+                'tab' => Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $widget->add_responsive_control(
+            'download_share_spacing',
+            [
+                'label' => esc_html__('Spacing', 'flow-audio'),
+                'type' => Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 50,
+                    ],
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .share-download-container' => 'gap: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        // Download Link Controls
+        $widget->add_control(
+            'download_link_heading',
+            [
+                'label' => esc_html__('Download Link', 'flow-audio'),
+                'type' => Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $widget->start_controls_tabs('download_link_style_tabs');
+
+        $widget->start_controls_tab(
+            'download_link_normal_tab',
+            [
+                'label' => esc_html__('Normal', 'flow-audio'),
+            ]
+        );
+
+        $widget->add_group_control(
+            Group_Control_Typography::get_type(),
+            [
+                'name' => 'download_link_typography',
+                'label' => esc_html__('Typography', 'flow-audio'),
+                'selector' => '{{WRAPPER}} .download-link',
+            ]
+        );
+
+        $widget->add_control(
+            'download_link_color',
+            [
+                'label' => esc_html__('Color', 'flow-audio'),
+                'type' => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .download-link' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $widget->end_controls_tab();
+
+        $widget->start_controls_tab(
+            'download_link_hover_tab',
+            [
+                'label' => esc_html__('Hover', 'flow-audio'),
+            ]
+        );
+
+        $widget->add_group_control(
+            Group_Control_Typography::get_type(),
+            [
+                'name' => 'download_link_hover_typography',
+                'label' => esc_html__('Typography', 'flow-audio'),
+                'selector' => '{{WRAPPER}} .download-link:hover',
+            ]
+        );
+
+        $widget->add_control(
+            'download_link_hover_color',
+            [
+                'label' => esc_html__('Color', 'flow-audio'),
+                'type' => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .download-link:hover' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $widget->end_controls_tab();
+
+        $widget->end_controls_tabs();
+
+        // Share Link Controls
+        $widget->add_control(
+            'share_link_heading',
+            [
+                'label' => esc_html__('Share Link', 'flow-audio'),
+                'type' => Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $widget->start_controls_tabs('share_link_style_tabs');
+
+        $widget->start_controls_tab(
+            'share_link_normal_tab',
+            [
+                'label' => esc_html__('Normal', 'flow-audio'),
+            ]
+        );
+
+        $widget->add_group_control(
+            Group_Control_Typography::get_type(),
+            [
+                'name' => 'share_link_typography',
+                'label' => esc_html__('Typography', 'flow-audio'),
+                'selector' => '{{WRAPPER}} .share-link',
+            ]
+        );
+
+        $widget->add_control(
+            'share_link_color',
+            [
+                'label' => esc_html__('Color', 'flow-audio'),
+                'type' => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .share-link' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $widget->end_controls_tab();
+
+        $widget->start_controls_tab(
+            'share_link_hover_tab',
+            [
+                'label' => esc_html__('Hover', 'flow-audio'),
+            ]
+        );
+
+        $widget->add_group_control(
+            Group_Control_Typography::get_type(),
+            [
+                'name' => 'share_link_hover_typography',
+                'label' => esc_html__('Typography', 'flow-audio'),
+                'selector' => '{{WRAPPER}} .share-link:hover',
+            ]
+        );
+
+        $widget->add_control(
+            'share_link_hover_color',
+            [
+                'label' => esc_html__('Color', 'flow-audio'),
+                'type' => Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .share-link:hover' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $widget->end_controls_tab();
+
+        $widget->end_controls_tabs();
+
+        $widget->end_controls_section();
     }
 }
