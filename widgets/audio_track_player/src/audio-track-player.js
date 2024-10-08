@@ -9,6 +9,7 @@ class AudioTrackPlayer {
         this.durationElement = this.element.querySelector('.duration');
         this.shareLink = this.element.querySelector('.share-link');
         this.downloadLink = this.element.querySelector('.download-link');
+        this.siteName = this.element.dataset.siteName;
         // Parse the track metadata
         this.trackMetadata = JSON.parse(this.element.dataset.trackMetadata);
 
@@ -119,7 +120,7 @@ class AudioTrackPlayer {
         const title = this.shareLink.dataset.trackTitle;
         const artist = this.shareLink.dataset.trackArtist;
         const url = this.shareLink.href;
-        const shareText = artist ? `Listen to "${title}" by First Love Music ft. ${artist}` : `Listen to "${title}" by First Love Music`;
+        const shareText = artist ? `Listen to "${title}" by First Love Music ft. ${artist} on ${this.siteName}:` : `Listen to "${title}" by First Love Music on ${this.siteName}:`;
         const shareTitle = artist ? `${title} by First Love Music ft. ${artist}` : `${title} by First Love Music`;
 
         if (navigator.share) {
