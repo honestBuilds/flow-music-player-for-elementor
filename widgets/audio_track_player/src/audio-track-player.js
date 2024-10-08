@@ -41,16 +41,19 @@ class AudioTrackPlayer {
 
     play() {
         this.initAudio();
-        this.audio.play();
+        this.audio.play().then(() => {
+            globalAudioManager.setCurrentPlayer(this);
+        }).catch(error => {
+            console.error('Error playing track:', error);
+        });
     }
 
     togglePlayPause() {
         this.initAudio();
         if (this.audio.paused) {
-            globalAudioManager.setCurrentPlayer(this);
-            this.audio.play();
+            this.play();
         } else {
-            this.audio.pause();
+            this.pause();
         }
     }
 
@@ -104,7 +107,7 @@ class AudioTrackPlayer {
                 artist: this.trackMetadata.track_artist,
                 album: this.trackMetadata.album_title,
                 artwork: [
-                    { src: this.trackMetadata.featured_image_url, sizes: '512x512', type: 'image/jpeg' }
+                    { src: this.trackMetadata.featured_image_url, sizes: '512x512', type: 'image/webp' }
                 ]
             });
         }
@@ -125,7 +128,6 @@ class AudioTrackPlayer {
                 text: shareText,
                 url: url
             }).then(() => {
-                console.log('Successfully shared');
             }).catch((error) => {
                 console.error('Error sharing:', error);
                 this.fallbackShare(title, artist, url);
@@ -136,17 +138,39 @@ class AudioTrackPlayer {
     }
 
     fallbackShare(title, artist, url) {
-        const shareText = `Check out "${title}" by ${artist}: ${url}`;
+        const shareText = artist ? `Listen to "${title}" by First Love Music ft. ${artist}: ${url}` : `Listen to "${title}" by First Love Music: ${url}`;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(shareText)
+                .then(() => {
+                    alert('Share link copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                    this.manualCopyFallback(shareText);
+                });
+        } else {
+            this.manualCopyFallback(shareText);
+        }
+    }
+
+    manualCopyFallback(text) {
         const textArea = document.createElement('textarea');
-        textArea.value = shareText;
+        textArea.value = text;
+        textArea.style.position = 'fixed';  // Avoid scrolling to bottom
         document.body.appendChild(textArea);
+        textArea.focus();
         textArea.select();
+
         try {
-            document.execCommand('copy');
+            const successful = document.execCommand('copy');
+            const msg = successful ? 'successful' : 'unsuccessful';
             alert('Share link copied to clipboard!');
         } catch (err) {
-            console.error('Failed to copy: ', err);
+            console.error('Fallback: Oops, unable to copy', err);
+            alert('Unable to copy to clipboard. Please copy the link manually.');
         }
+
         document.body.removeChild(textArea);
     }
 }
@@ -172,6 +196,7 @@ class GlobalAudioManager {
             this.currentPlayer.pause();
         }
         this.currentPlayer = player;
+        this.updateMediaSessionMetadata();
     }
 
     getNextPlayer() {
@@ -186,23 +211,63 @@ class GlobalAudioManager {
         const nextPlayer = this.getNextPlayer();
         if (nextPlayer) {
             nextPlayer.play();
+            this.setCurrentPlayer(nextPlayer);
+        } else {
+            console.error('No next player found');
+        }
+    }
+
+    getPreviousPlayer() {
+        const currentIndex = this.players.indexOf(this.currentPlayer);
+        if (currentIndex === -1 || currentIndex === 0) {
+            return this.players[this.players.length - 1]; // Loop back to the last player
+        }
+        return this.players[currentIndex - 1];
+    }
+
+    playPrevious() {
+        const previousPlayer = this.getPreviousPlayer();
+        if (previousPlayer) {
+            previousPlayer.play();
+            this.setCurrentPlayer(previousPlayer);
+        } else {
+            console.error('No previous player found');
+        }
+    }
+
+    updateMediaSessionMetadata() {
+        if ('mediaSession' in navigator && this.currentPlayer) {
+            const metadata = this.currentPlayer.trackMetadata;
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: metadata.track_title,
+                artist: metadata.track_artist,
+                album: metadata.album_title,
+                artwork: [
+                    { src: metadata.featured_image_url, sizes: '512x512', type: 'image/jpeg' }
+                ]
+            });
+        } else {
+            console.error('MediaSession not available or no current player');
         }
     }
 
     setupMediaSessionHandlers() {
         if ('mediaSession' in navigator) {
             navigator.mediaSession.setActionHandler('play', () => {
-                if (this.currentPlayer) this.currentPlayer.audio.play();
+                if (this.currentPlayer) this.currentPlayer.play();
             });
             navigator.mediaSession.setActionHandler('pause', () => {
-                if (this.currentPlayer) this.currentPlayer.audio.pause();
+                if (this.currentPlayer) this.currentPlayer.pause();
             });
             navigator.mediaSession.setActionHandler('previoustrack', () => {
-                // Implement previous track logic if needed
+                this.playPrevious();
+
             });
             navigator.mediaSession.setActionHandler('nexttrack', () => {
-                // Implement next track logic if needed
+                this.playNext();
             });
+        } else {
+            console.error('MediaSession not available');
         }
     }
 }
