@@ -37,7 +37,7 @@ use Elementor\Plugin;
     </div>
 
     <!-- Background Cover Art -->
-    <div class="fixed inset-0 bg-cover bg-center bg-no-repeat blur-3xl opacity-30 cover-art"
+    <div class="fixed inset-0 bg-cover bg-center bg-no-repeat blur-3xl opacity-30 cover-art z-0"
         style="background-image: url('<?php echo esc_url($cover_art_url); ?>');"></div>
 
     <!-- Main Container -->

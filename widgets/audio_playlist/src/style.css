@@ -41,6 +41,10 @@ button {
     border: none;
 }
 
+.z-0 {
+    z-index: -1;
+}
+
 /* Add these styles at the end of your existing CSS */
 
 #songList li {

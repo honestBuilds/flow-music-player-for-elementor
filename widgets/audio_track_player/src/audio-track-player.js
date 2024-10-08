@@ -13,6 +13,7 @@ class AudioTrackPlayer {
         this.trackMetadata = JSON.parse(this.element.dataset.trackMetadata);
 
         this.bindEvents();
+        globalAudioManager.addPlayer(this);
     }
 
     bindEvents() {
@@ -36,6 +37,11 @@ class AudioTrackPlayer {
                 this.updatePlayPauseButton(false);
             });
         }
+    }
+
+    play() {
+        this.initAudio();
+        this.audio.play();
     }
 
     togglePlayPause() {
@@ -77,6 +83,7 @@ class AudioTrackPlayer {
     onEnded() {
         this.playPauseBtn.classList.remove('playing');
         this.progressFill.style.width = '0%';
+        globalAudioManager.playNext();
     }
 
     updateDuration() {
@@ -152,7 +159,12 @@ document.addEventListener('DOMContentLoaded', () => {
 class GlobalAudioManager {
     constructor() {
         this.currentPlayer = null;
+        this.players = [];
         this.setupMediaSessionHandlers();
+    }
+
+    addPlayer(player) {
+        this.players.push(player);
     }
 
     setCurrentPlayer(player) {
@@ -160,6 +172,21 @@ class GlobalAudioManager {
             this.currentPlayer.pause();
         }
         this.currentPlayer = player;
+    }
+
+    getNextPlayer() {
+        const currentIndex = this.players.indexOf(this.currentPlayer);
+        if (currentIndex === -1 || currentIndex === this.players.length - 1) {
+            return this.players[0]; // Loop back to the first player
+        }
+        return this.players[currentIndex + 1];
+    }
+
+    playNext() {
+        const nextPlayer = this.getNextPlayer();
+        if (nextPlayer) {
+            nextPlayer.play();
+        }
     }
 
     setupMediaSessionHandlers() {
