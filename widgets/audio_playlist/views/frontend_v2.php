@@ -50,14 +50,14 @@ use Elementor\Plugin;
                     alt="Cover Art"></div>
 
                 <h1 class="album-title text-2xl font-bold mt-11"><?php echo esc_html($playlist_title); ?></h1>
-                <p class="text-gray-400 artist-name no-mbe"><?php echo esc_html($playlist_artist); ?></p>
-                <p class="text-gray-400 album-info no-mbe"><?php echo esc_html(ucfirst($playlist_type)) .  (empty($playlist_year) ? '' : ' • ' . esc_html($playlist_year)); ?></p>
+                <p class="artist-name no-mbe"><?php echo esc_html($playlist_artist); ?></p>
+                <p class="album-info no-mbe"><?php echo esc_html(ucfirst($playlist_type)) .  (empty($playlist_year) ? '' : ' • ' . esc_html($playlist_year)); ?></p>
                 <?php
                 $track_count = is_array($tracks_arr) ? count($tracks_arr) : 0;
                 $count_unit = $track_count === 1 ? substr($count_unit, 0, -1) : $count_unit; // handle plural or singular
                 $track_info = $track_count > 0 ? $track_count . ' ' . esc_html($count_unit) . ' • ' . esc_html($total_duration) : 'No tracks';
                 ?>
-                <p class="text-gray-400 album-stats no-mbe"><?php echo $track_info; ?></p>
+                <p class="album-stats no-mbe"><?php echo $track_info; ?></p>
 
                 <!-- Controls -->
                 <div class="flex space-x-4 mt-4 justify-center items-center">

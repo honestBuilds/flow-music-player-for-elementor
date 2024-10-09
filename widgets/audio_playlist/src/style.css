@@ -25,6 +25,12 @@
     text-overflow: ellipsis;
 }
 
+.album-stats,
+.album-info,
+.artist-name {
+    color: rgb(65, 65, 65);
+}
+
 .download-link {
     color: white;
 }
