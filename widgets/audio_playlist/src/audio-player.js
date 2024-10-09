@@ -86,7 +86,7 @@ jQuery(document).ready(function ($) {
             document.querySelectorAll('.play-button').forEach(button => {
                 button.addEventListener('click', () => {
                     if (!isPlaying && !isCurrentTrackInitialised()) {
-                        playTrack(0);
+                        playSong(0);
                     } else {
                         togglePlayPause();
                     }
@@ -195,12 +195,7 @@ jQuery(document).ready(function ($) {
             if (isPlaying) {
                 pauseAudio();
             } else {
-                if (!isCurrentTrackInitialised()) {
-                    // If no track is initialized, play the first track
-                    playTrack(0);
-                } else {
-                    playAudio();
-                }
+                playAudio();
             }
         }
 
@@ -210,7 +205,7 @@ jQuery(document).ready(function ($) {
                 console.log("Audio playing successfully");
                 isPlaying = true;
                 updatePlayButton();
-                // Keep all existing code here (media session updates, etc.)
+                updatePlayingState(currentTrack);
             }).catch(error => {
                 console.error("Error playing audio:", error);
             });
@@ -221,19 +216,18 @@ jQuery(document).ready(function ($) {
             audio.pause();
             isPlaying = false;
             updatePlayButton();
+            updatePlayingState(null); // remove playing state
         }
 
         function playPrevious() {
             if (currentTrack > 0) {
                 currentTrack--;
                 console.log(`Playing previous track. New index: ${currentTrack}`);
-                playSong(currentTrack);
             } else {
                 console.log("Already at the first track. Cannot go to previous.");
-                // Optionally, you could loop back to the last track here
                 currentTrack = trackList.length - 1;
-                playSong(currentTrack);
             }
+            playSong(currentTrack);
         }
 
         function playNext() {
@@ -241,42 +235,12 @@ jQuery(document).ready(function ($) {
             if (currentTrack < trackList.length - 1) {
                 currentTrack++;
                 console.log(`Playing next track. New index: ${currentTrack}`);
-                playSong(currentTrack);
             } else {
                 console.log("Already at the last track. Looping to first track.");
                 currentTrack = 0;
-                playSong(currentTrack);
             }
+            playSong(currentTrack);
         }
-
-        // function playTrack(index) {
-        //     console.log(`Attempting to play track at index: ${index}`);
-        //     if (trackList[index]) {
-        //         // Always pause the current audio before starting a new one
-        //         audio.pause();
-
-        //         // If it's a different track, load the new one
-        //         if (currentTrack !== index) {
-        //             audio.src = trackList[index].url;
-        //             audio.load();
-        //             currentTrack = index;
-        //         }
-
-        //         // Play the track
-        //         audio.play().then(() => {
-        //             console.log(`Now playing track at index: ${index}`);
-        //             isPlaying = true;
-        //             updatePlayingState(index);
-        //             updatePlayButton();
-        //             updateCurrentSongInfo(index);
-        //             // Keep all existing code here (media session updates, etc.)
-        //         }).catch(error => {
-        //             console.error("Error playing audio:", error);
-        //         });
-        //     } else {
-        //         console.error("Track index out of range: ", index);
-        //     }
-        // }
 
         // Modify the existing playSong function
         function playSong(index) {
@@ -326,8 +290,11 @@ jQuery(document).ready(function ($) {
         }
 
         function updatePlayingState(index) {
+            console.log(`Updating playing state for index: ${index}`);
             $('#songList li').removeClass('playing');
-            $(`#songList li[data-track-index="${index}"]`).addClass('playing');
+            if (index !== null && index !== undefined) {
+                $(`#songList li[data-track-index="${index}"]`).addClass('playing');
+            }
         }
 
         function updatePlayButton() {
