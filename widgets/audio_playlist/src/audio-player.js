@@ -6,7 +6,7 @@ jQuery(document).ready(function ($) {
 
         const { title, artist, year, coverArt, tracks, playButtonImage, pauseButtonImage, totalDuration, downloadLink } = albumData;
 
-        let currentTrack;
+        let currentTrack = 0; // Initialize currentTrack to 0
         let isPlaying = false;
         let audio = new Audio();
 
@@ -34,6 +34,15 @@ jQuery(document).ready(function ($) {
                 console.log('Tracks initialized:', trackList);
             } else {
                 console.error('Invalid tracks data.');
+            }
+        }
+
+        function initPlayer() {
+            if (trackList.length > 0) {
+                // Set the audio source to the first track
+                audio.src = trackList[0].url;
+                audio.load();
+                updateCurrentSongInfo(0);
             }
         }
 
@@ -75,13 +84,22 @@ jQuery(document).ready(function ($) {
             });
 
             document.querySelectorAll('.play-button').forEach(button => {
-                button.addEventListener('click', togglePlayPause);
+                button.addEventListener('click', () => {
+                    if (!isPlaying && !isCurrentTrackInitialised()) {
+                        playTrack(0);
+                    } else {
+                        togglePlayPause();
+                    }
+                });
             });
             document.querySelectorAll('.prev-button').forEach(button => {
                 button.addEventListener('click', playPrevious);
             });
             document.querySelectorAll('.next-button').forEach(button => {
-                button.addEventListener('click', playNext);
+                button.addEventListener('click', () => {
+                    console.log("Next button clicked");
+                    playNext();
+                });
             });
 
             // Media session handlers
@@ -186,32 +204,16 @@ jQuery(document).ready(function ($) {
             }
         }
 
-        function selectTrack(index) {
-            console.log(`Selecting track at index: ${index}`);
-            if (trackList[index]) {
-                if (currentTrack !== index) {
-                    // If it's a different track, load it and play
-                    audio.pause();
-                    audio.src = trackList[index].url;
-                    audio.load();
-                    currentTrack = index;
-                    playAudio();
-                } else {
-                    // If it's the same track, toggle play/pause
-                    togglePlayPause();
-                }
-                updatePlayingState(index);
-                updateCurrentSongInfo(index);
-            } else {
-                console.error("Track index out of range: ", index);
-            }
-        }
-
         function togglePlayPause() {
             if (isPlaying) {
                 pauseAudio();
             } else {
-                playAudio();
+                if (!isCurrentTrackInitialised()) {
+                    // If no track is initialized, play the first track
+                    playTrack(0);
+                } else {
+                    playAudio();
+                }
             }
         }
 
@@ -241,79 +243,91 @@ jQuery(document).ready(function ($) {
                 playSong(currentTrack);
             } else {
                 console.log("Already at the first track. Cannot go to previous.");
+                // Optionally, you could loop back to the last track here
+                currentTrack = trackList.length - 1;
+                playSong(currentTrack);
             }
         }
 
         function playNext() {
+            console.log("playNext called. Current track:", currentTrack);
             if (currentTrack < trackList.length - 1) {
                 currentTrack++;
                 console.log(`Playing next track. New index: ${currentTrack}`);
                 playSong(currentTrack);
             } else {
-                console.log("Already at the last track. Cannot go to next.");
+                console.log("Already at the last track. Looping to first track.");
+                currentTrack = 0;
+                playSong(currentTrack);
             }
         }
 
-        function playTrack(index) {
-            console.log(`Attempting to play track at index: ${index}`);
+        // function playTrack(index) {
+        //     console.log(`Attempting to play track at index: ${index}`);
+        //     if (trackList[index]) {
+        //         // Always pause the current audio before starting a new one
+        //         audio.pause();
+
+        //         // If it's a different track, load the new one
+        //         if (currentTrack !== index) {
+        //             audio.src = trackList[index].url;
+        //             audio.load();
+        //             currentTrack = index;
+        //         }
+
+        //         // Play the track
+        //         audio.play().then(() => {
+        //             console.log(`Now playing track at index: ${index}`);
+        //             isPlaying = true;
+        //             updatePlayingState(index);
+        //             updatePlayButton();
+        //             updateCurrentSongInfo(index);
+        //             // Keep all existing code here (media session updates, etc.)
+        //         }).catch(error => {
+        //             console.error("Error playing audio:", error);
+        //         });
+        //     } else {
+        //         console.error("Track index out of range: ", index);
+        //     }
+        // }
+
+        // Modify the existing playSong function
+        function playSong(index) {
+            console.log(`playSong called with index: ${index}`);
             if (trackList[index]) {
-                // Always pause the current audio before starting a new one
+                console.log("Track found. Pausing current audio.");
                 audio.pause();
 
-                // If it's a different track, load the new one
                 if (currentTrack !== index) {
+                    console.log("Loading new track.");
                     audio.src = trackList[index].url;
                     audio.load();
                     currentTrack = index;
                 }
 
-                // Play the track
+                console.log("Attempting to play audio.");
                 audio.play().then(() => {
                     console.log(`Now playing track at index: ${index}`);
                     isPlaying = true;
                     updatePlayingState(index);
                     updatePlayButton();
                     updateCurrentSongInfo(index);
-                    // Keep all existing code here (media session updates, etc.)
+                    if ('mediaSession' in navigator) {
+                        console.log("Updating media session metadata.");
+                        navigator.mediaSession.metadata = new MediaMetadata({
+                            title: trackList[index].title,
+                            artist: artist,
+                            album: title,
+                            artwork: [{
+                                src: coverArt,
+                                sizes: '512x512',
+                                type: 'image/webp'
+                            }]
+                        });
+                    }
                 }).catch(error => {
                     console.error("Error playing audio:", error);
                 });
-            } else {
-                console.error("Track index out of range: ", index);
-            }
-        }
-
-        // Modify the existing playSong function
-        function playSong(index) {
-            console.log(`Attempting to play song at index: ${index}`);
-            if (trackList[index]) {
-                if (currentTrack === index) {
-                    // If it's the same track, toggle play/pause
-                    if (isPlaying) {
-                        audio.pause();
-                        isPlaying = false;
-                    } else {
-                        audio.play().catch(error => console.error("Error playing audio:", error));
-                        isPlaying = true;
-                    }
-                } else {
-                    // If it's a different track, stop current and play new
-                    audio.pause();
-                    audio.src = trackList[index].url;
-                    audio.load();
-                    currentTrack = index;
-                    audio.play().then(() => {
-                        console.log(`Now playing track at index: ${index}`);
-                        isPlaying = true;
-                        // Keep all existing code here (media session updates, etc.)
-                    }).catch(error => {
-                        console.error("Error playing audio:", error);
-                    });
-                }
-
-                updatePlayingState(index);
-                updatePlayButton();
-                updateCurrentSongInfo(index);
             } else {
                 console.error("Track index out of range: ", index);
             }
@@ -355,6 +369,7 @@ jQuery(document).ready(function ($) {
         updatePageTitle();
         // Initialize the player
         initTracksFromLocalisedData();
+        initPlayer();
         setupEventListeners();
 
 
