@@ -106,37 +106,24 @@ jQuery(document).ready(function ($) {
             // Add event listener to update media session metadata when the audio is playing
             // Event listeners to update 'isPlaying' and UI based on audio state
             audio.addEventListener('play', () => {
+                console.log("Audio 'play' event triggered");
                 isPlaying = true;
                 updatePlayButton();
-
                 const progressBar = document.getElementById('progress-bar');
                 if (progressBar && progressBar.style.display === "none") {
                     progressBar.style.display = "block";
                     progressBar.style.width = "100%";
                 }
-
-                if ('mediaSession' in navigator) {
-                    navigator.mediaSession.metadata = new MediaMetadata({
-                        title: trackList[isCurrentTrackInitialised ? currentTrack : 0]['title'], // Update with the track title
-                        artist: artist, // Update with the artist name
-                        album: title, // Update with the album name
-                        artwork: [{
-                            src: coverArt, // Path to album art image
-                            sizes: '512x512', // Size of the image
-                            type: 'image/webp'
-                        }]
-                    });
-                }
             });
 
-            audio.addEventListener('pause', function () {
+            audio.addEventListener('pause', () => {
+                console.log("Audio 'pause' event triggered");
                 isPlaying = false;
                 updatePlayButton();
             });
 
-            audio.addEventListener('ended', function () {
-                isPlaying = false;
-                updatePlayButton();
+            audio.addEventListener('ended', () => {
+                console.log("Audio 'ended' event triggered");
                 playNext();
             });
 
@@ -295,39 +282,44 @@ jQuery(document).ready(function ($) {
         function playSong(index) {
             console.log(`playSong called with index: ${index}`);
             if (trackList[index]) {
-                console.log("Track found. Pausing current audio.");
+                console.log("Track found. Stopping current audio.");
                 audio.pause();
+                audio.currentTime = 0;  // Reset the current time
 
-                if (currentTrack !== index) {
-                    console.log("Loading new track.");
-                    audio.src = trackList[index].url;
-                    audio.load();
-                    currentTrack = index;
-                }
+                console.log("Loading new track.");
+                audio.src = trackList[index].url;
+                audio.load();
+                currentTrack = index;
 
                 console.log("Attempting to play audio.");
-                audio.play().then(() => {
-                    console.log(`Now playing track at index: ${index}`);
-                    isPlaying = true;
-                    updatePlayingState(index);
-                    updatePlayButton();
-                    updateCurrentSongInfo(index);
-                    if ('mediaSession' in navigator) {
-                        console.log("Updating media session metadata.");
-                        navigator.mediaSession.metadata = new MediaMetadata({
-                            title: trackList[index].title,
-                            artist: artist,
-                            album: title,
-                            artwork: [{
-                                src: coverArt,
-                                sizes: '512x512',
-                                type: 'image/webp'
-                            }]
-                        });
-                    }
-                }).catch(error => {
-                    console.error("Error playing audio:", error);
-                });
+                let playPromise = audio.play();
+
+                if (playPromise !== undefined) {
+                    playPromise.then(_ => {
+                        console.log(`Now playing track at index: ${index}`);
+                        isPlaying = true;
+                        updatePlayingState(index);
+                        updatePlayButton();
+                        updateCurrentSongInfo(index);
+                        if ('mediaSession' in navigator) {
+                            console.log("Updating media session metadata.");
+                            navigator.mediaSession.metadata = new MediaMetadata({
+                                title: trackList[index].title,
+                                artist: artist,
+                                album: title,
+                                artwork: [{
+                                    src: coverArt,
+                                    sizes: '512x512',
+                                    type: 'image/webp'
+                                }]
+                            });
+                        }
+                    }).catch(error => {
+                        console.error("Error playing audio:", error);
+                        isPlaying = false;
+                        updatePlayButton();
+                    });
+                }
             } else {
                 console.error("Track index out of range: ", index);
             }
@@ -339,9 +331,16 @@ jQuery(document).ready(function ($) {
         }
 
         function updatePlayButton() {
+            console.log("Updating play button. isPlaying:", isPlaying);
             const playButtons = document.querySelectorAll('.play-button img');
             playButtons.forEach(button => {
-                button.src = isPlaying ? pauseButtonImage : playButtonImage;
+                if (isPlaying) {
+                    button.src = pauseButtonImage;
+                    button.alt = "Pause";
+                } else {
+                    button.src = playButtonImage;
+                    button.alt = "Play";
+                }
             });
         }
 
