@@ -54,6 +54,7 @@ use Elementor\Plugin;
                 <p class="album-info no-mbe"><?php echo esc_html(ucfirst($playlist_type)) .  (empty($playlist_year) ? '' : ' • ' . esc_html($playlist_year)); ?></p>
                 <?php
                 $track_count = is_array($tracks_arr) ? count($tracks_arr) : 0;
+                $track_count = $track_count - $adjust_track_count; // adjust track count
                 $count_unit = $track_count === 1 ? substr($count_unit, 0, -1) : $count_unit; // handle plural or singular
                 $track_info = $track_count > 0 ? $track_count . ' ' . esc_html($count_unit) . ' • ' . esc_html($total_duration) : 'No tracks';
                 ?>

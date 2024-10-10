@@ -192,6 +192,9 @@ class Flow_Audio_Playlist_Widget extends Widget_Base
                     break;
             }
 
+            // Fetch the value from the adjust_track_count control
+            $adjust_track_count = isset($settings['adjust_track_count']) ? intval($settings['adjust_track_count']) : 0;
+
             // Get Tracks Data
             if ($settings['album_source'] === 'album_cpt' && !empty($settings['album_cpt'])) {
                 $post_id = $settings['album_cpt'];

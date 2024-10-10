@@ -276,6 +276,18 @@ class Content_Controls extends Controls_Manager
             ]
         );
 
+        $widget->add_control(
+            'adjust_track_count',
+            [
+                'label' => esc_html__('Adjust track count by:', 'flow-audio'),
+                'type' => Controls_Manager::NUMBER,
+                'default' => 0,
+                'dynamic' => [
+                    'active' => true,
+                ],
+            ]
+        );
+
 
         $widget->end_controls_section();
 
