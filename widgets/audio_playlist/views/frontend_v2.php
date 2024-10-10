@@ -13,7 +13,7 @@ use Elementor\Plugin;
                 <img id="coverArt" src="<?php echo esc_url($cover_art_url); ?>" alt="Cover Art" class="w-12 h-12 rounded-md mr-3">
                 <div>
                     <p class="font-semibold text-sm current-song-title m-track-title"><?php echo esc_html($tracks_arr[0]['track_title'] ?? ''); ?></p>
-                    <p class="text-xs text-gray-400 artist-name"><?php echo esc_html($playlist_artist); ?></p>
+                    <p class="text-xs artist-name"><?php echo esc_html($playlist_artist); ?></p>
                 </div>
             </div>
             <div class="flex items-center">
