@@ -174,6 +174,17 @@ jQuery(document).ready(function ($) {
             if (progressBarFill) {
                 progressBarFill.addEventListener('transitionend', updateProgressBar);
             }
+
+            // Add event listener for keyboard controls
+            document.addEventListener('keydown', handleKeyPress);
+        }
+
+        function handleKeyPress(e) {
+            // Check if the pressed key is the space bar and the target is not an input or textarea
+            if (e.code === 'Space' && !/input|textarea/i.test(e.target.tagName)) {
+                e.preventDefault(); // Prevent default space bar behavior (usually page scroll)
+                togglePlayPause();
+            }
         }
 
         function startDragging(e) {
@@ -259,8 +270,12 @@ jQuery(document).ready(function ($) {
             if (isPlaying) {
                 pauseAudio();
             } else if (!isLoading) {
-                showLoadingSpinner();
-                playAudio();
+                if (!isCurrentTrackInitialised()) {
+                    playSong(0); // Play the first track if no track is currently initialized
+                } else {
+                    showLoadingSpinner();
+                    playAudio();
+                }
             }
         }
 
