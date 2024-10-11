@@ -6,9 +6,9 @@ use Elementor\Plugin;
 <div id="flow-audio-playlist-body">
 
     <!-- Mobile Player -->
-    <div id="mobile-player" class="md:hidden fixed bottom-0 left-0 right-0 bg-gray-900 flex flex-col z-20 shadow-lg text-white font-sans">
+    <div id="floating-player" class="fixed bottom-0 left-0 right-0 flex flex-col z-20 shadow-lg text-white font-sans">
         <input id="progress-bar" type="range" min="0" max="100" value="0" style="display: none;">
-        <div class="flex items-center justify-between p-3">
+        <div class="flex items-center justify-between p-3 floating-player-content">
             <div class="flex items-center">
                 <img id="coverArt" src="<?php echo esc_url($cover_art_url); ?>" alt="Cover Art" class="w-12 h-12 rounded-md mr-3">
                 <div>
