@@ -171,7 +171,6 @@
 
 .share-download-container {
     display: flex;
-    /* gap is now controlled by Elementor */
 }
 
 .download-link,

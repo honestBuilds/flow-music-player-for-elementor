@@ -10,15 +10,25 @@ class AudioTrackPlayer {
         this.shareLink = this.element.querySelector('.share-link');
         this.downloadLink = this.element.querySelector('.download-link');
         this.siteName = this.element.dataset.siteName;
-        // Parse the track metadata
-        this.trackMetadata = JSON.parse(this.element.dataset.trackMetadata);
+
+        // Parse the track metadata with error handling
+        try {
+            this.trackMetadata = JSON.parse(this.element.dataset.trackMetadata);
+        } catch (error) {
+            console.error('Error parsing track metadata:', error);
+            console.log('Raw metadata:', this.element.dataset.trackMetadata);
+            this.trackMetadata = {}; // Set a default empty object
+        }
 
         this.bindEvents();
         globalAudioManager.addPlayer(this);
     }
 
     bindEvents() {
-        this.playPauseBtn.addEventListener('click', () => this.togglePlayPause());
+        this.playPauseBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.togglePlayPause();
+        });
         this.progressBar.addEventListener('click', (e) => this.seek(e));
         this.shareLink.addEventListener('click', (e) => this.shareTrack(e));
     }
@@ -176,10 +186,46 @@ class AudioTrackPlayer {
     }
 }
 
+// Use a MutationObserver to handle dynamically added players
+const observeDOM = (function () {
+    const MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+    return function (obj, callback) {
+        if (!obj || obj.nodeType !== 1) return;
+
+        if (MutationObserver) {
+            const obs = new MutationObserver(function (mutations, observer) {
+                callback(mutations);
+            });
+            obs.observe(obj, { childList: true, subtree: true });
+        } else if (window.addEventListener) {
+            obj.addEventListener('DOMNodeInserted', callback, false);
+            obj.addEventListener('DOMNodeRemoved', callback, false);
+        }
+    }
+})();
+
+// Initialize players and observe DOM for changes
 document.addEventListener('DOMContentLoaded', () => {
+    initializePlayers();
+
+    // Observe the body for changes
+    observeDOM(document.body, function (mutations) {
+        mutations.forEach(function (mutation) {
+            const addedNodes = mutation.addedNodes;
+            for (let i = 0; i < addedNodes.length; i++) {
+                if (addedNodes[i].nodeType === 1 && addedNodes[i].classList.contains('flow-audio-track-player')) {
+                    new AudioTrackPlayer(addedNodes[i]);
+                }
+            }
+        });
+    });
+});
+
+function initializePlayers() {
     const players = document.querySelectorAll('.flow-audio-track-player');
     players.forEach(player => new AudioTrackPlayer(player));
-});
+}
 
 class GlobalAudioManager {
     constructor() {

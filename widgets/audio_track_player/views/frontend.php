@@ -41,7 +41,7 @@ $track_metadata = [
 ];
 
 // Encode the track metadata as JSON
-$track_metadata_json = json_encode($track_metadata);
+$track_metadata_json = json_encode($track_metadata, JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_UNESCAPED_UNICODE);
 
 $siteName = get_bloginfo('name');
 
@@ -57,7 +57,7 @@ $siteName = get_bloginfo('name');
 ?>
 
 
-<div class="flow-audio-track-player" data-track-metadata='<?php echo $track_metadata_json; ?>' data-audio-src="<?php echo esc_url($track_url); ?>" data-site-name="<?php echo esc_attr($siteName); ?>">
+<div class="flow-audio-track-player" data-track-metadata='<?php echo esc_attr($track_metadata_json); ?>' data-audio-src="<?php echo esc_url($track_url); ?>" data-site-name="<?php echo esc_attr($siteName); ?>">
     <?php if ($featured_image) : ?>
         <?php if ($use_blurred_background) : ?>
             <div class="flow-audio-track-player-background bg-cover bg-center bg-no-repeat" style="background-image: url('<?php echo esc_url($featured_image); ?>');"></div>
