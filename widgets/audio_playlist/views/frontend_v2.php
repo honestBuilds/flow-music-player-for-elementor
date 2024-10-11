@@ -5,9 +5,13 @@ use Elementor\Plugin;
 ?>
 <div id="flow-audio-playlist-body">
 
-    <!-- Mobile Player -->
+    <!-- Floating Player -->
     <div id="floating-player" class="fixed bottom-0 left-0 right-0 flex flex-col z-20 shadow-lg text-white font-sans">
-        <input id="progress-bar" type="range" min="0" max="100" value="0" style="display: none;">
+        <div id="progress-bar-container" class="w-full bg-gray-700">
+            <div id="progress-bar-fill" class="h-full bg-red-500 relative">
+                <div id="progress-bar-head" class="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-red-500 rounded-full"></div>
+            </div>
+        </div>
         <div class="flex items-center justify-between p-3 floating-player-content">
             <div class="flex items-center">
                 <img id="coverArt" src="<?php echo esc_url($cover_art_url); ?>" alt="Cover Art" class="w-12 h-12 rounded-md mr-3">
@@ -23,8 +27,11 @@ use Elementor\Plugin;
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>
                 </button>
-                <button class="play-button bg-white text-black p-[17px] rounded-full overflow-hidden w-12 h-12">
-                    <img src="<?php echo plugin_dir_url(__FILE__) . '../src/play-btn.svg'; ?>" alt="Play Button" class="object-cover">
+                <button class="play-button bg-white text-black p-[17px] rounded-full overflow-hidden w-12 h-12 relative">
+                    <div class="button-content relative w-full h-full">
+                        <img src="<?php echo plugin_dir_url(__FILE__) . '../src/play-btn.svg'; ?>" alt="Play Button" class="play-icon absolute inset-0 m-auto">
+                        <div class="spinner-border hidden absolute inset-0 m-auto border-3 border-[#2f2f2f] border-t-transparent rounded-full"></div>
+                    </div>
                 </button>
                 <button class="ml-4 next-button">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -78,8 +85,11 @@ use Elementor\Plugin;
                         </svg>
                     </button>
                     <!-- Play Button -->
-                    <button class="play-button bg-white text-black p-[17px] rounded-full overflow-hidden w-12 h-12">
-                        <img src="<?php echo plugin_dir_url(__FILE__) . '../src/play-btn.svg'; ?>" alt="Play Button" class="object-cover">
+                    <button class="play-button bg-white text-black p-[17px] rounded-full overflow-hidden w-12 h-12 relative">
+                        <div class="button-content relative w-full h-full">
+                            <img src="<?php echo plugin_dir_url(__FILE__) . '../src/play-btn.svg'; ?>" alt="Play Button" class="play-icon absolute inset-0 m-auto">
+                            <div class="spinner-border hidden absolute inset-0 m-auto border-3 border-[#2f2f2f] border-t-transparent rounded-full"></div>
+                        </div>
                     </button>
                     <!-- Next Button -->
                     <button class="bg-gray-800 p-2 rounded-full next-button text-white">

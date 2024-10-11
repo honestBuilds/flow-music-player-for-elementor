@@ -1,4 +1,5 @@
 jQuery(document).ready(function ($) {
+    console.log("Document ready");
 
     // Access albumData passed from PHP
     if (typeof albumData !== 'undefined') {
@@ -38,47 +39,26 @@ jQuery(document).ready(function ($) {
         }
 
         function initPlayer() {
+            console.log("Initializing player");
             if (trackList.length > 0) {
-                // Set the audio source to the first track
                 audio.src = trackList[0].url;
                 audio.load();
                 updateCurrentSongInfo(0);
+                console.log("First track loaded:", trackList[0].url);
+            } else {
+                console.error("Track list is empty");
             }
         }
 
-        // Example albumData
-        // const albumData = {
-        //     title: playlist["title"],
-        //     artist: playlist["artist"],
-        //     year: playlist["year"],
-        //     coverArt: cover,
-        //     duration: "",
-        //     tracks: playlist["tracks"],
-        //     loadTracks: async function () {
-
-        //         let totalDuration = 0;
-
-        //         for (let track of this.tracks) {
-        //             const audio = new Audio(track["url"]);
-        //             await new Promise(resolve => {
-        //                 audio.addEventListener('loadedmetadata', () => {
-        //                     // const title = track["url"].split('/').pop().replace('.mp3', '');
-        //                     const duration = audio.duration;
-        //                     totalDuration += duration;
-        //                     // this.tracks.push({ title, duration: formatDuration(duration), url });
-
-        //                     resolve();
-        //                 });
-        //             });
-        //         }
-
-        //         this.duration = formatDuration(totalDuration);
-        //     }
-        // };
+        let isDragging = false;
+        let progressBarContainer, progressBarFill, progressBarHead;
+        let lastTouchX;
 
         function setupEventListeners() {
+            console.log("Setting up event listeners");
 
             $('#songList li').off('click').on('click', function () {
+                showLoadingSpinner(); // Show spinner before playing
                 const trackIndex = $(this).data('track-index');
                 playSong(trackIndex);
             });
@@ -109,11 +89,6 @@ jQuery(document).ready(function ($) {
                 console.log("Audio 'play' event triggered");
                 isPlaying = true;
                 updatePlayButton();
-                const progressBar = document.getElementById('progress-bar');
-                if (progressBar && progressBar.style.display === "none") {
-                    progressBar.style.display = "block";
-                    progressBar.style.width = "100%";
-                }
             });
 
             audio.addEventListener('pause', () => {
@@ -124,6 +99,8 @@ jQuery(document).ready(function ($) {
 
             audio.addEventListener('ended', () => {
                 console.log("Audio 'ended' event triggered");
+                isLoading = true;
+                showLoadingSpinner();
                 playNext();
             });
 
@@ -164,17 +141,102 @@ jQuery(document).ready(function ($) {
                 });
             }
 
-            const progressBar = document.getElementById('progress-bar');
-            progressBar.addEventListener('input', () => {
-                const seekTime = (progressBar.value / 100) * audio.duration;
+            progressBarContainer = document.getElementById('progress-bar-container');
+            progressBarFill = document.getElementById('progress-bar-fill');
+            progressBarHead = document.getElementById('progress-bar-head');
+
+            if (progressBarContainer && progressBarFill && progressBarHead) {
+                progressBarContainer.addEventListener('mousedown', startDragging);
+                progressBarContainer.addEventListener('touchstart', startDragging);
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('touchmove', drag, { passive: false });
+                document.addEventListener('mouseup', stopDragging);
+                document.addEventListener('touchend', stopDragging);
+                document.addEventListener('mouseleave', stopDragging);
+                document.addEventListener('touchcancel', stopDragging);
+            }
+
+            progressBarContainer.addEventListener('click', (e) => {
+                console.log("Progress bar clicked");
+                const rect = progressBarContainer.getBoundingClientRect();
+                const clickPosition = e.clientX - rect.left;
+                const clickPercentage = clickPosition / rect.width;
+                const seekTime = clickPercentage * audio.duration;
                 audio.currentTime = seekTime;
             });
 
-            audio.addEventListener('timeupdate', () => {
-                const progress = (audio.currentTime / audio.duration) * 100;
-                const progressBar = document.getElementById('progress-bar');
-                progressBar.value = progress;
+            audio.addEventListener('timeupdate', updateProgressBar);
+            audio.addEventListener('loadedmetadata', () => {
+                console.log("Audio metadata loaded");
+                updateProgressBar();
             });
+
+            if (progressBarFill) {
+                progressBarFill.addEventListener('transitionend', updateProgressBar);
+            }
+        }
+
+        function startDragging(e) {
+            e.preventDefault();
+            isDragging = true;
+            lastTouchX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            updateProgressFromEvent(e);
+            progressBarHead.style.opacity = '1';
+        }
+
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                requestAnimationFrame(() => updateProgressFromEvent(e));
+            }
+        }
+
+        function stopDragging() {
+            if (isDragging) {
+                isDragging = false;
+                audio.currentTime = calculateSeekTime(parseFloat(progressBarFill.style.width) / 100);
+                progressBarHead.style.opacity = '';
+            }
+        }
+
+        function updateProgressFromEvent(e) {
+            const rect = progressBarContainer.getBoundingClientRect();
+            const containerWidth = rect.width;
+            const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+
+            // For touch events, calculate the delta movement to reduce jitter
+            if (e.type.includes('touch')) {
+                const delta = clientX - lastTouchX;
+                lastTouchX = clientX;
+                const currentWidth = parseFloat(progressBarFill.style.width) || 0;
+                const newPercentage = Math.max(0, Math.min(100, currentWidth + (delta / containerWidth * 100)));
+                updateProgressBarPosition(newPercentage / 100);
+            } else {
+                const clickPosition = clientX - rect.left;
+                const percentage = Math.max(0, Math.min(1, clickPosition / containerWidth));
+                updateProgressBarPosition(percentage);
+            }
+        }
+
+        function updateProgressBarPosition(percentage) {
+            const fillWidth = percentage * 100;
+            const containerWidth = progressBarContainer.offsetWidth;
+            const headWidth = progressBarHead.offsetWidth;
+            const headPosition = (percentage * containerWidth) - (headWidth / 2);
+
+            progressBarFill.style.width = `${fillWidth}%`;
+            progressBarHead.style.transform = `translate(${headPosition}px, -50%)`;
+        }
+
+        function calculateSeekTime(percentage) {
+            return percentage * audio.duration;
+        }
+
+        function updateProgressBar() {
+            if (!isNaN(audio.duration) && !isDragging) {
+                const progress = audio.currentTime / audio.duration;
+                updateProgressBarPosition(progress);
+            }
         }
 
         // Function to update the position state (as shown before)
@@ -191,23 +253,33 @@ jQuery(document).ready(function ($) {
             }
         }
 
+        let isLoading = false;
+
         function togglePlayPause() {
             if (isPlaying) {
                 pauseAudio();
-            } else {
+            } else if (!isLoading) {
+                showLoadingSpinner();
                 playAudio();
             }
         }
 
         function playAudio() {
             console.log("Attempting to play audio");
+            isLoading = true;
             audio.play().then(() => {
                 console.log("Audio playing successfully");
+                isLoading = false;
                 isPlaying = true;
                 updatePlayButton();
                 updatePlayingState(currentTrack);
+                hideLoadingSpinner();
             }).catch(error => {
                 console.error("Error playing audio:", error);
+                isLoading = false;
+                isPlaying = false;
+                updatePlayButton();
+                hideLoadingSpinner();
             });
         }
 
@@ -216,10 +288,11 @@ jQuery(document).ready(function ($) {
             audio.pause();
             isPlaying = false;
             updatePlayButton();
-            updatePlayingState(null); // remove playing state
+            updatePlayingState(null);
         }
 
         function playPrevious() {
+            showLoadingSpinner(); // Show spinner before playing
             if (currentTrack > 0) {
                 currentTrack--;
                 console.log(`Playing previous track. New index: ${currentTrack}`);
@@ -231,6 +304,7 @@ jQuery(document).ready(function ($) {
         }
 
         function playNext() {
+            showLoadingSpinner(); // Show spinner before playing
             console.log("playNext called. Current track:", currentTrack);
             if (currentTrack < trackList.length - 1) {
                 currentTrack++;
@@ -246,6 +320,9 @@ jQuery(document).ready(function ($) {
         function playSong(index) {
             console.log(`playSong called with index: ${index}`);
             if (trackList[index]) {
+                isLoading = true;
+                showLoadingSpinner();
+
                 console.log("Track found. Stopping current audio.");
                 audio.pause();
                 audio.currentTime = 0;  // Reset the current time
@@ -255,38 +332,53 @@ jQuery(document).ready(function ($) {
                 audio.load();
                 currentTrack = index;
 
-                console.log("Attempting to play audio.");
-                let playPromise = audio.play();
+                // Remove previous event listeners
+                audio.removeEventListener('canplay', onCanPlay);
 
-                if (playPromise !== undefined) {
-                    playPromise.then(_ => {
-                        console.log(`Now playing track at index: ${index}`);
-                        isPlaying = true;
-                        updatePlayingState(index);
-                        updatePlayButton();
-                        updateCurrentSongInfo(index);
-                        if ('mediaSession' in navigator) {
-                            console.log("Updating media session metadata.");
-                            navigator.mediaSession.metadata = new MediaMetadata({
-                                title: trackList[index].title,
-                                artist: artist,
-                                album: title,
-                                artwork: [{
-                                    src: coverArt,
-                                    sizes: '512x512',
-                                    type: 'image/webp'
-                                }]
-                            });
-                        }
-                    }).catch(error => {
-                        console.error("Error playing audio:", error);
-                        isPlaying = false;
-                        updatePlayButton();
-                    });
-                }
+                // Add new event listener for this playback
+                audio.addEventListener('canplay', onCanPlay);
+
+                console.log("Waiting for audio to be ready...");
             } else {
                 console.error("Track index out of range: ", index);
             }
+        }
+
+        function onCanPlay() {
+            console.log("Audio is ready to play");
+            if (isLoading) {
+                isLoading = false;
+                hideLoadingSpinner();
+                audio.play().then(() => {
+                    console.log("Audio playing successfully");
+                    isPlaying = true;
+                    updatePlayButton();
+                    updatePlayingState(currentTrack);
+                    updateCurrentSongInfo(currentTrack);
+                    updateProgressBar();
+                    if ('mediaSession' in navigator) {
+                        console.log("Updating media session metadata.");
+                        updateMediaSessionMetadata(currentTrack);
+                    }
+                }).catch(error => {
+                    console.error("Error playing audio:", error);
+                    isPlaying = false;
+                    updatePlayButton();
+                });
+            }
+        }
+
+        function updateMediaSessionMetadata(index) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: trackList[index].title,
+                artist: artist,
+                album: title,
+                artwork: [{
+                    src: coverArt,
+                    sizes: '512x512',
+                    type: 'image/webp'
+                }]
+            });
         }
 
         function updatePlayingState(index) {
@@ -299,14 +391,19 @@ jQuery(document).ready(function ($) {
 
         function updatePlayButton() {
             console.log("Updating play button. isPlaying:", isPlaying);
-            const playButtons = document.querySelectorAll('.play-button img');
-            playButtons.forEach(button => {
+            const playIcons = document.querySelectorAll('.play-button .play-icon');
+            playIcons.forEach(icon => {
                 if (isPlaying) {
-                    button.src = pauseButtonImage;
-                    button.alt = "Pause";
+                    icon.src = pauseButtonImage;
+                    icon.alt = "Pause";
                 } else {
-                    button.src = playButtonImage;
-                    button.alt = "Play";
+                    icon.src = playButtonImage;
+                    icon.alt = "Play";
+                }
+                if (!isLoading) {
+                    icon.style.display = 'block';
+                    icon.nextElementSibling.classList.add('hidden');
+                    icon.nextElementSibling.style.display = 'none';
                 }
             });
         }
@@ -331,6 +428,39 @@ jQuery(document).ready(function ($) {
             }
         }
 
+        function showLoadingSpinner() {
+            console.log("Showing loading spinner");
+            document.querySelectorAll('.play-button .button-content').forEach(content => {
+                content.querySelector('.play-icon').style.display = 'none';
+                let spinner = content.querySelector('.spinner-border');
+                spinner.classList.remove('hidden');
+                spinner.style.display = 'block';
+            });
+        }
+
+        function hideLoadingSpinner() {
+            console.log("Hiding loading spinner");
+            document.querySelectorAll('.play-button .button-content').forEach(content => {
+                content.querySelector('.play-icon').style.display = 'block';
+                let spinner = content.querySelector('.spinner-border');
+                spinner.classList.add('hidden');
+                spinner.style.display = 'none';
+            });
+        }
+
+        // Add this function to initialize the button state
+        function initializeButtonState() {
+            document.querySelectorAll('.play-button .button-content').forEach(content => {
+                content.querySelector('.play-icon').style.display = 'block';
+                let spinner = content.querySelector('.spinner-border');
+                spinner.classList.add('hidden');
+                spinner.style.display = 'none';
+            });
+        }
+
+        // Call this function when the page loads
+        document.addEventListener('DOMContentLoaded', initializeButtonState);
+
         // Change page title
         updatePageTitle();
         // Initialize the player
@@ -343,6 +473,7 @@ jQuery(document).ready(function ($) {
         console.error('Album data is not available.');
     }
 
+    console.log("Script initialization complete");
 });
 
 // Elementor editor code

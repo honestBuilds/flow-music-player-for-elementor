@@ -58,9 +58,13 @@ use Elementor\Utils;
 
     <div id="flow-audio-playlist-body">
         <!-- Mobile Player -->
-        <div class="md:hidden fixed bottom-0 left-0 right-0 bg-gray-900 flex flex-col z-20 shadow-lg text-white font-sans">
-            <input id="progress-bar" type="range" min="0" max="100" value="0" style="display: none;">
-            <div class="flex items-center justify-between p-3">
+        <div id="floating-player" class="fixed bottom-0 left-0 right-0 bg-gray-900 flex flex-col z-20 shadow-lg text-white font-sans">
+        <div id="progress-bar-container" class="w-full h-1 bg-gray-700">
+            <div id="progress-bar-fill" class="h-full bg-red-500 relative">
+                <div id="progress-bar-head" class="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-red-500 rounded-full"></div>
+            </div>
+        </div>
+            <div class="flex items-center justify-between p-3 floating-player-content">
                 <div class="flex items-center">
                     <img id="coverArt" src="{{ albumData.cover_art }}" alt="Cover Art" class="w-12 h-12 rounded-md mr-3">
                     <div>
