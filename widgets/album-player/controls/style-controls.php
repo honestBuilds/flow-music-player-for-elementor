@@ -1,6 +1,6 @@
 <?php
 
-namespace Flow_Widgets_For_Elementor\Widgets\Controls;
+namespace Flow_Music_Player_For_Elementor\Widgets\Controls;
 
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
@@ -9,7 +9,7 @@ use Elementor\Group_Control_Typography;
  * Controls for the Style section of Elementor panel
  */
 
-class Style_Controls extends Controls_Manager
+class Album_Player_Style_Controls extends Controls_Manager
 {
 
     public function register_controls($widget)

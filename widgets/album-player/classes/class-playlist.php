@@ -1,6 +1,6 @@
 <?php
 
-namespace Flow_Widgets_For_Elementor\Widgets\Classes;
+namespace Flow_Music_Player_For_Elementor\Widgets\Classes;
 
 use JsonSerializable;
 

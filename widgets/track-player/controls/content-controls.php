@@ -1,6 +1,6 @@
 <?php
 
-namespace Flow_Widgets_For_Elementor\Widgets\Controls;
+namespace Flow_Music_Player_For_Elementor\Widgets\Controls;
 
 use Elementor\Controls_Manager;
 use Elementor\Modules\DynamicTags\Module as TagsModule;

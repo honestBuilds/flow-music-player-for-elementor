@@ -1,8 +1,8 @@
 <?php
 
-namespace Flow_Widgets_For_Elementor\Widgets\Classes;
+namespace Flow_Music_Player_For_Elementor\Widgets\Classes;
 
-require_once(__DIR__ . '/../../../assets/util/audio_utils.php');
+require_once(__DIR__ . '/../../../assets/util/audio-utils.php');
 
 class Track
 {

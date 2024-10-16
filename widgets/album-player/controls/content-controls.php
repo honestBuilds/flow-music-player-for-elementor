@@ -1,6 +1,6 @@
 <?php
 
-namespace Flow_Widgets_For_Elementor\Widgets\Controls;
+namespace Flow_Music_Player_For_Elementor\Widgets\Controls;
 
 use Elementor\Controls_Manager;
 use Elementor\Repeater;
@@ -10,7 +10,7 @@ use Elementor\Utils;
  * Controls for the Content section of Elementor panel
  */
 
-class Content_Controls extends Controls_Manager
+class Album_Player_Content_Controls extends Controls_Manager
 {
 
     public function register_controls($widget)

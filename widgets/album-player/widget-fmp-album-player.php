@@ -1,29 +1,27 @@
 <?php
 
-namespace Flow_Widgets_For_Elementor\Widgets;
+namespace Flow_Music_Player_For_Elementor\Widgets;
 
 // Ensure all imports are from the right namespace
 use Elementor\Widget_Base;
 use Elementor\Utils;
-use Flow_Widgets_For_Elementor\Widgets\Controls\Style_Controls;
-use Flow_Widgets_For_Elementor\Widgets\Controls\Content_Controls;
-use Flow_Widgets_For_Elementor\Widgets\Classes\Track;
-use Flow_Widgets_For_Elementor\Widgets\Classes\Playlist;
+use Flow_Music_Player_For_Elementor\Widgets\Controls\Album_Player_Style_Controls;
+use Flow_Music_Player_For_Elementor\Widgets\Controls\Album_Player_Content_Controls;
+use Flow_Music_Player_For_Elementor\Widgets\Classes\Track;
 
 // Security Note: Blocks direct access to the plugin PHP files.
 if (!defined('ABSPATH')) exit;
 
 // Widget controls imports
-require_once(__DIR__ . '/controls/content_controls.php');
-require_once(__DIR__ . '/controls/style_controls.php');
+require_once(__DIR__ . '/controls/content-controls.php');
+require_once(__DIR__ . '/controls/style-controls.php');
 
 // Util imports
-require_once(__DIR__ . '/../../assets/util/audio_utils.php');
-require_once(__DIR__ . '/classes/track.php');
-require_once(__DIR__ . '/classes/playlist.php');
+require_once(__DIR__ . '/../../assets/util/audio-utils.php');
+require_once(__DIR__ . '/classes/class-track.php');
 
 
-class Flow_Audio_Playlist_Widget extends Widget_Base
+class FMP_Album_Player_Widget extends Widget_Base
 {
     public function __construct($data = [], $args = null)
     {
@@ -85,8 +83,8 @@ class Flow_Audio_Playlist_Widget extends Widget_Base
     {
         // Files relative to the current file's directory
         $css_files = [
-            'tailwind.css' => 'tailwind_css_for_audio_playlist',
-            'style.css'    => 'other_css_for_audio_playlist',
+            'tailwind.css' => 'tailwind-css-for-album-player',
+            'album-player.css'    => 'album-player-css',
         ];
 
         foreach ($css_files as $filename => $handle) {
@@ -116,7 +114,7 @@ class Flow_Audio_Playlist_Widget extends Widget_Base
     {
         // Files relative to the current file's directory
         $js_files = [
-            'audio-player.js' => 'audio-player-js',
+            'album-player.js' => 'audio-player-js',
         ];
 
         foreach ($js_files as $filename => $handle) {
@@ -146,11 +144,11 @@ class Flow_Audio_Playlist_Widget extends Widget_Base
     protected function _register_controls()
     {
         // Content
-        $content_controls = new Content_Controls();
+        $content_controls = new Album_Player_Content_Controls();
         $content_controls->register_controls($this);
 
         // Style
-        $style_controls = new Style_Controls();
+        $style_controls = new Album_Player_Style_Controls();
         $style_controls->register_controls($this);
     }
 
@@ -247,7 +245,7 @@ class Flow_Audio_Playlist_Widget extends Widget_Base
             ob_start();
 
             // Include the frontend template
-            include(__DIR__ . '/views/frontend_v2.php');
+            include(__DIR__ . '/views/frontend.php');
 
             // End output buffer and echo
             echo ob_get_clean();

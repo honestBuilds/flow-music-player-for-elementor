@@ -10,7 +10,7 @@ function flow_get_album_cpt_data()
     }
 
     $album_id = intval($_POST['album_id']);
-    $widget = new Flow_Widgets_For_Elementor\Widgets\Flow_Audio_Playlist_Widget();
+    $widget = new Flow_Music_Player_For_Elementor\Widgets\FMP_Album_Player_Widget();
     $album_data = $widget->get_album_cpt_data($album_id);
 
     if ($album_data) {

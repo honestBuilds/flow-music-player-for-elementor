@@ -95,7 +95,7 @@ $siteName = get_bloginfo('name');
                     <?php if (isset($track_download_link) && !empty($track_download_link)) : ?>
                         <a href="<?php echo esc_url($track_download_link); ?>" target="_blank" class="download-link elementor-button-link">Download</a>
                     <?php endif; ?>
-                    <a href="<?php echo esc_url(get_permalink()); ?>" class="share-link elementor-button-link" data-track-title="<?php echo esc_attr($track_title); ?>" data-track-artist="<?php echo esc_attr($track_artist); ?>">Share</a>
+                    <a href="#" class="share-link elementor-button-link" data-track-title="<?php echo esc_attr($track_title); ?>" data-track-artist="<?php echo esc_attr($track_artist); ?>">Share</a>
                 </div>
             </div>
 

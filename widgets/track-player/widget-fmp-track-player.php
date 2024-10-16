@@ -1,27 +1,27 @@
 <?php
 
-namespace Flow_Widgets_For_Elementor\Widgets;
+namespace Flow_Music_Player_For_Elementor\Widgets;
 
 // Ensure all imports are from the right namespace
 use Elementor\Widget_Base;
 use Elementor\Utils;
-use Flow_Widgets_For_Elementor\Widgets\Controls\Track_Player_Style_Controls;
-use Flow_Widgets_For_Elementor\Widgets\Controls\Track_Player_Content_Controls;
-use Flow_Widgets_For_Elementor\Widgets\Classes\Track;
-use Flow_Widgets_For_Elementor\Widgets\Classes\Playlist;
+use Flow_Music_Player_For_Elementor\Widgets\Controls\Track_Player_Style_Controls;
+use Flow_Music_Player_For_Elementor\Widgets\Controls\Track_Player_Content_Controls;
+use Flow_Music_Player_For_Elementor\Widgets\Classes\Track;
+use Flow_Music_Player_For_Elementor\Widgets\Classes\Playlist;
 
 // Security Note: Blocks direct access to the plugin PHP files.
 if (!defined('ABSPATH')) exit;
 
 // Widget controls imports
-require_once(__DIR__ . '/controls/content_controls.php');
-require_once(__DIR__ . '/controls/style_controls.php');
+require_once(__DIR__ . '/controls/content-controls.php');
+require_once(__DIR__ . '/controls/style-controls.php');
 
 // Util imports
-require_once(__DIR__ . '/../../assets/util/audio_utils.php');
+require_once(__DIR__ . '/../../assets/util/audio-utils.php');
 
 
-class Flow_Audio_Track_Player_Widget extends Widget_Base
+class FMP_Track_Player_Widget extends Widget_Base
 {
     public function __construct($data = [], $args = null)
     {
@@ -75,7 +75,7 @@ class Flow_Audio_Track_Player_Widget extends Widget_Base
     {
         // Files relative to the current file's directory
         $css_files = [
-            'audio-track-player.css'    => 'audio-track-player-css',
+            'track-player.css'    => 'track-player-css',
         ];
 
         foreach ($css_files as $filename => $handle) {
@@ -105,7 +105,7 @@ class Flow_Audio_Track_Player_Widget extends Widget_Base
     {
         // Files relative to the current file's directory
         $js_files = [
-            'audio-track-player.js' => 'audio-track-player-js',
+            'track-player.js' => 'track-player-js',
         ];
 
         foreach ($js_files as $filename => $handle) {

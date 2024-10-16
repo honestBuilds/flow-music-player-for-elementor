@@ -139,6 +139,7 @@ class AudioTrackPlayer {
                 text: shareText,
                 url: url
             }).then(() => {
+                this.logShare();
             }).catch((error) => {
                 console.error('Error sharing:', error);
                 this.fallbackShare(title, artist, url);
@@ -183,6 +184,34 @@ class AudioTrackPlayer {
         }
 
         document.body.removeChild(textArea);
+    }
+
+    logShare() {
+        const postId = this.element.dataset.postId;
+        const postType = this.element.dataset.postType;
+
+        fetch('/wp-admin/admin-ajax.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                action: 'fmp_log_share',
+                post_id: postId,
+                post_type: postType,
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Share logged successfully');
+                } else {
+                    console.error('Failed to log share');
+                }
+            })
+            .catch(error => {
+                console.error('Error logging share:', error);
+            });
     }
 }
 

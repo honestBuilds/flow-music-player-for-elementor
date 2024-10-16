@@ -1,8 +1,3 @@
-<?php
-
-use Elementor\Plugin;
-
-?>
 <div id="flow-audio-playlist-body">
 
     <!-- Floating Player -->
