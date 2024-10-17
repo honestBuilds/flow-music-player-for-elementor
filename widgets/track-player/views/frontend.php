@@ -57,7 +57,8 @@ $siteName = get_bloginfo('name');
 ?>
 
 
-<div class="flow-audio-track-player" data-track-metadata='<?php echo esc_attr($track_metadata_json); ?>' data-audio-src="<?php echo esc_url($track_url); ?>" data-site-name="<?php echo esc_attr($siteName); ?>">
+<div class="flow-audio-track-player" data-track-metadata='<?php echo esc_attr($track_metadata_json); ?>' data-audio-src="<?php echo esc_url($track_url); ?>" data-site-name="<?php echo esc_attr($siteName); ?>" data-post-id="<?php echo esc_attr(get_the_ID()); ?>"
+    data-post-type="<?php echo esc_attr(get_post_type()); ?>">
     <?php if ($featured_image) : ?>
         <?php if ($use_blurred_background) : ?>
             <div class="flow-audio-track-player-background bg-cover bg-center bg-no-repeat" style="background-image: url('<?php echo esc_url($featured_image); ?>');"></div>
@@ -95,7 +96,7 @@ $siteName = get_bloginfo('name');
                     <?php if (isset($track_download_link) && !empty($track_download_link)) : ?>
                         <a href="<?php echo esc_url($track_download_link); ?>" target="_blank" class="download-link elementor-button-link">Download</a>
                     <?php endif; ?>
-                    <a href="#" class="share-link elementor-button-link" data-track-title="<?php echo esc_attr($track_title); ?>" data-track-artist="<?php echo esc_attr($track_artist); ?>">Share</a>
+                    <a href="<?php echo esc_url(get_permalink()); ?>" class="share-link elementor-button-link" data-track-title="<?php echo esc_attr($track_title); ?>" data-track-artist="<?php echo esc_attr($track_artist); ?>">Share</a>
                 </div>
             </div>
 

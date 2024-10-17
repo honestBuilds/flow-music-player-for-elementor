@@ -34,7 +34,7 @@ function register_album_post_type_and_meta()
         'show_in_menu'       => true,
         'show_ui'            => true,
         'show_in_rest'       => true,
-        'menu_position'      => 20,
+        'menu_position'      => 32,
         'menu_icon'          => 'dashicons-album',
         'publicly_queryable' => true,
         'query_var'          => true,

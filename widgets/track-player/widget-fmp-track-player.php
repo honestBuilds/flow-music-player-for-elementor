@@ -162,7 +162,6 @@ class FMP_Track_Player_Widget extends Widget_Base
 
     private function get_track_cpt_data($track_id)
     {
-        error_log("Getting track data for ID: " . $track_id);
         $track = get_post($track_id);
         if (!$track) {
             error_log("Track not found for ID: " . $track_id);

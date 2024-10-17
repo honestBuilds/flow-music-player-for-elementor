@@ -190,6 +190,11 @@ class AudioTrackPlayer {
         const postId = this.element.dataset.postId;
         const postType = this.element.dataset.postType;
 
+        if (!postId || !postType) {
+            console.error('Missing post ID or post type for share logging');
+            return;
+        }
+
         fetch('/wp-admin/admin-ajax.php', {
             method: 'POST',
             headers: {
@@ -206,7 +211,7 @@ class AudioTrackPlayer {
                 if (data.success) {
                     console.log('Share logged successfully');
                 } else {
-                    console.error('Failed to log share');
+                    console.error('Failed to log share:', data.data);
                 }
             })
             .catch(error => {

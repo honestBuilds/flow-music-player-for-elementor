@@ -2,7 +2,7 @@
 /*
 Plugin Name: Flow Music Player for Elementor
 Description: Music Player for Elementor: MP3 Audio Player & Podcast Player
-Version: 1.0
+Version: 0.0.1
 Author: Joseph Mills
 */
 
@@ -12,6 +12,8 @@ if (!defined('ABSPATH')) exit;
 
 class FMP_For_Elementor
 {
+    private $version;
+
     public function __construct()
     {
         add_action('plugins_loaded', array($this, 'init'), 20);
@@ -20,10 +22,49 @@ class FMP_For_Elementor
     public function init()
     {
         $this->check_elementor_dependency();
+        $this->set_version();
+        $this->load_required_files();
+        $this->init_plugin_activation();
         $this->register_widgets();
         $this->enqueue_scripts();
         $this->add_custom_widget_categories();
-        $this->load_required_files();
+        $this->init_functionality();
+    }
+
+    private function set_version()
+    {
+        $plugin_data = get_file_data(__FILE__, array('Version' => 'Version'), false);
+        $this->version = $plugin_data['Version'] . '.' . filemtime(__FILE__);
+    }
+
+    public function check_version()
+    {
+        if (get_option('fmp_version') != $this->version) {
+            $this->create_database_tables();
+            update_option('fmp_version', $this->version);
+        }
+    }
+
+    public function activate_plugin()
+    {
+        $this->create_database_tables();
+        update_option('fmp_version', $this->version);
+    }
+
+    // Activation hook
+    function init_plugin_activation()
+    {
+        register_activation_hook(__FILE__, array($this, 'activate_plugin'));
+        // Run database creation on plugin load as well (in case activation hook didn't run)
+        add_action('plugins_loaded', array($this, 'check_version'));
+
+        // add_action('plugins_loaded', array($this, 'create_database_tables'));
+    }
+
+    function create_database_tables()
+    {
+        require_once(__DIR__ . '/includes/database.php');
+        fmp_create_database_tables();
     }
 
     private function check_elementor_dependency()
@@ -59,10 +100,10 @@ class FMP_For_Elementor
 
     private function enqueue_scripts()
     {
-        add_action('wp_enqueue_scripts', array($this, 'flow_audio_playlist_enqueue_scripts'));
+        add_action('wp_enqueue_scripts', array($this, 'fmp_enqueue_scripts'));
     }
 
-    public function flow_audio_playlist_enqueue_scripts()
+    public function fmp_enqueue_scripts()
     {
         $script_path = plugin_dir_path(__FILE__) . 'assets/js/script.js';
         wp_enqueue_script(
@@ -72,6 +113,11 @@ class FMP_For_Elementor
             filemtime($script_path),
             true
         );
+
+        // AJAX
+        $ajax_script_path = plugin_dir_path(__FILE__) . 'assets/js/script.js';
+        wp_enqueue_script('ajax-js', plugin_dir_url(__FILE__) . 'js/flow-music-player.js', array('jquery'), filemtime($ajax_script_path), true,);
+        wp_localize_script('fmp-ajax-localised', 'fmpAjax', array('ajaxurl' => admin_url('admin-ajax.php')));
     }
 
     private function add_custom_widget_categories()
@@ -90,13 +136,24 @@ class FMP_For_Elementor
         );
     }
 
+    private function init_functionality()
+    {
+        // Ajax handler for logging shares
+        add_action('wp_ajax_fmp_log_share', 'fmp_log_share');
+        add_action('wp_ajax_nopriv_fmp_log_share', 'fmp_log_share');
+    }
+
     private function load_required_files()
     {
+        // Include Composer autoloader
+        require_once(__DIR__ . '/vendor/autoload.php');
         require_once(__DIR__ . '/cpts/album/album.php');
         require_once(__DIR__ . '/cpts/track/track.php');
         require_once(__DIR__ . '/cpts/cpt-util.php');
         require_once(__DIR__ . '/dynamic-tags/dynamic-tags.php');
         // require_once(__DIR__ . '/debug.php');
+        require_once(__DIR__ . '/includes/admin-menu.php');
+        require_once(__DIR__ . '/includes/share-tracking.php');
     }
 }
 

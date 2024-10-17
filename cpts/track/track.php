@@ -34,7 +34,7 @@ function register_track_post_type_and_meta()
         'show_in_menu'       => true,
         'show_ui'            => true,
         'show_in_rest'       => true,
-        'menu_position'      => 20,
+        'menu_position'      => 31,
         'menu_icon'          => 'dashicons-format-audio',
         'publicly_queryable' => true,
         'query_var'          => true,

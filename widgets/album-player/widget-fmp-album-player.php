@@ -156,17 +156,9 @@ class FMP_Album_Player_Widget extends Widget_Base
     {
         $settings = $this->get_settings_for_display();
 
-        // Add debugging
-        error_log('Album source: ' . $settings['album_source']);
-        error_log('Album CPT ID: ' . $settings['album_cpt']);
-
         if ($settings['album_source'] === 'album_cpt' && !empty($settings['album_cpt'])) {
             $post_id = $settings['album_cpt'];
             $album_data = $this->get_album_cpt_data($post_id);
-
-            // Add debugging
-            error_log('Album data: ' . print_r($album_data, true));
-
             // Playlist Details
             $playlist_title = '';
             $playlist_artist = '';
@@ -236,11 +228,6 @@ class FMP_Album_Player_Widget extends Widget_Base
                 ]
             );
 
-            // Add debugging
-            error_log('Localized script data: ' . print_r(wp_json_encode($album_data), true));
-
-            // wp_enqueue_script('your-plugin-audio-player-js');
-
             // Start output buffer
             ob_start();
 
@@ -256,7 +243,6 @@ class FMP_Album_Player_Widget extends Widget_Base
     {
         $settings = parent::get_settings_for_display($setting_key);
         if (null === $settings) {
-            error_log('Settings are null in Flow_Audio_Playlist_Widget');
             return []; // Return an empty array as fallback
         }
         return $settings;
@@ -273,7 +259,6 @@ class FMP_Album_Player_Widget extends Widget_Base
 
         $album = get_post($album_id);
         if (!$album) {
-            error_log("Album not found for ID: " . $album_id);
             return null;
         }
 
@@ -281,7 +266,6 @@ class FMP_Album_Player_Widget extends Widget_Base
         $album_artist = !empty($album_artists) ? $album_artists[0]->name : '';
 
         $tracks = get_post_meta($album_id, 'album_tracks', true);
-        // error_log("Raw tracks data: " . print_r($tracks, true));
 
         $formatted_tracks = [];
         $total_dur_secs = 0;
@@ -322,8 +306,6 @@ class FMP_Album_Player_Widget extends Widget_Base
             'total_duration' => format_audio_duration($total_dur_secs),
             'download_link' => get_post_meta($album_id, 'album_download_link', true),
         ];
-
-        // error_log("Formatted album data: " . print_r($album_data, true));
 
         return $album_data;
     }
