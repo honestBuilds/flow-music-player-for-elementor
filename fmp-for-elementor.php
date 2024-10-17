@@ -23,8 +23,8 @@ class FMP_For_Elementor
     {
         $this->check_elementor_dependency();
         $this->set_version();
+        $this->update_db_check();
         $this->load_required_files();
-        $this->init_plugin_activation();
         $this->register_widgets();
         $this->enqueue_scripts();
         $this->add_custom_widget_categories();
@@ -34,12 +34,13 @@ class FMP_For_Elementor
     private function set_version()
     {
         $plugin_data = get_file_data(__FILE__, array('Version' => 'Version'), false);
-        $this->version = $plugin_data['Version'] . '.' . filemtime(__FILE__);
+        $this->version = $plugin_data['Version'];
     }
 
-    public function check_version()
+    public function update_db_check()
     {
-        if (get_option('fmp_version') != $this->version) {
+        $installed_version = get_option('fmp_version');
+        if ($installed_version != $this->version) {
             $this->create_database_tables();
             update_option('fmp_version', $this->version);
         }
@@ -51,15 +52,6 @@ class FMP_For_Elementor
         update_option('fmp_version', $this->version);
     }
 
-    // Activation hook
-    function init_plugin_activation()
-    {
-        register_activation_hook(__FILE__, array($this, 'activate_plugin'));
-        // Run database creation on plugin load as well (in case activation hook didn't run)
-        add_action('plugins_loaded', array($this, 'check_version'));
-
-        // add_action('plugins_loaded', array($this, 'create_database_tables'));
-    }
 
     function create_database_tables()
     {
@@ -158,4 +150,6 @@ class FMP_For_Elementor
 }
 
 // Initialize the plugin
-new \Flow_Music_Player_For_Elementor\FMP_For_Elementor();
+$fmp = new \Flow_Music_Player_For_Elementor\FMP_For_Elementor();
+// Register activation hook 
+register_activation_hook(__FILE__, array($fmp, 'activate_plugin'));

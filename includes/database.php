@@ -18,7 +18,7 @@ function fmp_create_database_tables()
         PRIMARY KEY  (id)
     ) $charset_collate;";
 
-    require_once(wp_normalize_path(admin_url('includes/upgrade.php')));
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     $result = dbDelta($sql);
 
     error_log("dbDelta result: " . print_r($result, true));

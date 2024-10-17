@@ -130,7 +130,7 @@ class AudioTrackPlayer {
         const title = this.shareLink.dataset.trackTitle;
         const artist = this.shareLink.dataset.trackArtist;
         const url = this.shareLink.href;
-        const shareText = artist ? `Listen to "${title}" by First Love Music ft. ${artist} on ${this.siteName}:` : `Listen to "${title}" by First Love Music on ${this.siteName}:`;
+        const shareText = artist ? `Listen to "${title}" by First Love Music ft. ${artist} on ${this.siteName}.` : `Listen to "${title}" by First Love Music on ${this.siteName}.`;
         const shareTitle = artist ? `${title} by First Love Music ft. ${artist}` : `${title} by First Love Music`;
 
         if (navigator.share) {
