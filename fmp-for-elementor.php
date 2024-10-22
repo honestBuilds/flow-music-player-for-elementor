@@ -146,6 +146,7 @@ class FMP_For_Elementor
         // require_once(__DIR__ . '/debug.php');
         require_once(__DIR__ . '/includes/admin-menu.php');
         require_once(__DIR__ . '/includes/share-tracking.php');
+        require_once(__DIR__ . '/includes/share-data.php');
     }
 }
 

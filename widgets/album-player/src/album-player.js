@@ -1,17 +1,20 @@
 jQuery(document).ready(function ($) {
-    console.log("Document ready");
-
     // Access albumData passed from PHP
     if (typeof albumData !== 'undefined') {
         console.log('Album Data:', albumData);
 
-        const { title, artist, year, coverArt, tracks, playButtonImage, pauseButtonImage, totalDuration, downloadLink } = albumData;
+        const { title, artist, year, coverArt, tracks, playButtonImage, pauseButtonImage, totalDuration, downloadLink, siteName } = albumData;
 
         let currentTrack = 0; // Initialize currentTrack to 0
         let isPlaying = false;
         let audio = new Audio();
 
         const trackList = []; // This will be populated from the localized data
+
+        const albumPlayer = document.getElementById('fmp-album-player');
+        const postId = albumPlayer.dataset.postId;
+        const postType = albumPlayer.dataset.postType;
+        const postUrl = albumPlayer.dataset.postUrl;
 
         function isCurrentTrackInitialised() {
             return typeof currentTrack !== 'undefined'
@@ -72,14 +75,17 @@ jQuery(document).ready(function ($) {
                     }
                 });
             });
+
             document.querySelectorAll('.prev-button').forEach(button => {
                 button.addEventListener('click', playPrevious);
             });
+
             document.querySelectorAll('.next-button').forEach(button => {
-                button.addEventListener('click', () => {
-                    console.log("Next button clicked");
-                    playNext();
-                });
+                button.addEventListener('click', playNext);
+            });
+
+            document.querySelectorAll('.share-button').forEach(button => {
+                button.addEventListener('click', shareAlbum);
             });
 
             // Media session handlers
@@ -438,7 +444,7 @@ jQuery(document).ready(function ($) {
                     titleParts.push(albumData.artist);
                 }
 
-                var newTitle = titleParts.join(' - ') + ' | ' + albumData.siteName;
+                var newTitle = titleParts.join(' - ') + ' | ' + siteName;
                 document.title = newTitle;
             }
         }
@@ -475,6 +481,95 @@ jQuery(document).ready(function ($) {
 
         // Call this function when the page loads
         document.addEventListener('DOMContentLoaded', initializeButtonState);
+
+        function shareAlbum() {
+            // e.preventDefault(); // Prevent the default link behavior
+
+            const shareText = artist ? `Listen to "${title}" by ${artist} on the ${siteName} website.` : `Listen to "${title}" on the ${siteName} website.`;
+            const shareTitle = artist ? `${title} by ${artist} - ${siteName}` : `${title} - ${siteName}`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: shareTitle,
+                    text: shareText,
+                    url: postUrl
+                }).then(() => {
+                    logShare();
+                }).catch((error) => {
+                    console.error('Error sharing:', error);
+                    fallbackShare(title, artist, postUrl, siteName);
+                });
+            } else {
+                fallbackShare(title, artist, postUrl, siteName);
+            }
+        }
+
+        function fallbackShare(title, artist, url, siteName) {
+            const shareText = artist ? `Listen to "${title}" by ${artist} on the ${siteName} website: ${url}` : `Listen to "${title}" on the ${siteName} website: ${url}`;
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(shareText)
+                    .then(() => {
+                        alert('Share link copied to clipboard!');
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy: ', err);
+                        manualCopyFallback(shareText);
+                    });
+            } else {
+                manualCopyFallback(shareText);
+            }
+        }
+
+        function manualCopyFallback(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';  // Avoid scrolling to bottom
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                const successful = document.execCommand('copy');
+                const msg = successful ? 'successful' : 'unsuccessful';
+                alert('Share link copied to clipboard!');
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+                alert('Unable to copy to clipboard. Please copy the link manually.');
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+        function logShare() {
+            if (!postId || !postType) {
+                console.error('Missing post ID or post type for share logging');
+                return;
+            }
+
+            fetch('/wp-admin/admin-ajax.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    action: 'fmp_log_share',
+                    post_id: postId,
+                    post_type: postType,
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Share logged successfully');
+                    } else {
+                        console.error('Failed to log share:', data.data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error logging share:', error);
+                });
+        }
 
         // Change page title
         updatePageTitle();

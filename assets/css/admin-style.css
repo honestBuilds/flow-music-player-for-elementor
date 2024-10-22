@@ -1,0 +1,38 @@
+.fmp-dashboard-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.fmp-card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+    padding: 20px;
+    flex: 1;
+    min-width: 200px;
+}
+
+.fmp-big-number {
+    font-size: 36px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.fmp-dashboard-chart {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .04);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.chart-container {
+    height: 25vh;
+    width: 50%;
+}
+
+#timeRangeSelect {
+    margin-bottom: 10px;
+}

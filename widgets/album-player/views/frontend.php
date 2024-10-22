@@ -1,4 +1,4 @@
-<div id="flow-audio-playlist-body">
+<div id="fmp-album-player" data-post-id="<?php echo esc_attr(get_the_ID()); ?>" data-post-type="<?php echo esc_attr(get_post_type()); ?>" data-post-url="<?php echo esc_url(get_permalink()); ?>">
 
     <!-- Floating Player -->
     <div id="floating-player" class="fixed bottom-0 left-0 right-0 flex flex-col z-20 shadow-lg text-white font-sans">
@@ -66,7 +66,7 @@
                 <div class="flex space-x-4 mt-4 justify-center items-center">
                     <!-- Download Button -->
                     <a href="<?php echo $download_link ? esc_url($download_link) : '#'; ?>" class="download-link bg-gray-800 p-2 rounded-full text-white" target="_self" rel="noopener noreferrer">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
@@ -93,13 +93,16 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
                     </button>
-                    <!-- Refresh Button -->
-                    <button class="bg-gray-800 p-2 rounded-full text-white">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
-                            </path>
+                    <!-- Share Button -->
+                    <button class="bg-gray-800 p-1 rounded-full text-white share-button">
+                        <svg fill="currentColor" width="32" height="32" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                            <g id="SVGRepo_iconCarrier">
+                                <path d="M30.3 13.7L25 8.4l-5.3 5.3-1.4-1.4L25 5.6l6.7 6.7z"></path>
+                                <path d="M24 7h2v21h-2z"></path>
+                                <path d="M35 40H15c-1.7 0-3-1.3-3-3V19c0-1.7 1.3-3 3-3h7v2h-7c-.6 0-1 .4-1 1v18c0 .6.4 1 1 1h20c.6 0 1-.4 1-1V19c0-.6-.4-1-1-1h-7v-2h7c1.7 0 3 1.3 3 3v18c0 1.7-1.3 3-3 3z"></path>
+                            </g>
                         </svg>
                     </button>
                 </div>

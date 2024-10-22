@@ -3,7 +3,7 @@
 use Elementor\Utils;
 
 ?>
-<script type="text/template" id="tmpl-flow-audio-playlist">
+<script type="text/template" id="tmpl-fmp-album-player">
     <# 
     try {
         var albumSource = settings.album_source;
@@ -56,7 +56,7 @@ use Elementor\Utils;
         }
     #>
 
-    <div id="flow-audio-playlist-body">
+    <div id="fmp-album-player">
         <!-- Mobile Player -->
         <div id="floating-player" class="fixed bottom-0 left-0 right-0 bg-gray-900 flex flex-col z-20 shadow-lg text-white font-sans">
         <div id="progress-bar-container" class="w-full h-1 bg-gray-700">
@@ -126,12 +126,12 @@ use Elementor\Utils;
     <# } #>
 </script>
 
-<div id="flow-audio-playlist-preview"></div>
+<div id="fmp-album-player-preview"></div>
 
 <script>
     jQuery(document).ready(function($) {
-        var template = wp.template('flow-audio-playlist');
-        $('#flow-audio-playlist-preview').html(template(elementor.config.widgets.widget_type_to_settings[elementor.config.widgets.activeWidget]));
+        var template = wp.template('fmp-album-player');
+        $('#fmp-album-player-preview').html(template(elementor.config.widgets.widget_type_to_settings[elementor.config.widgets.activeWidget]));
 
         // If album_source is 'album_cpt', make an AJAX call to get the album data
         var settings = elementor.config.widgets.widget_type_to_settings[elementor.config.widgets.activeWidget];
@@ -146,7 +146,7 @@ use Elementor\Utils;
                 success: function(response) {
                     if (response.success) {
                         // Update the preview with the fetched data
-                        $('#flow-audio-playlist-preview').html(template($.extend({}, settings, {
+                        $('#fmp-album-player-preview').html(template($.extend({}, settings, {
                             albumData: response.data
                         })));
                     } else {

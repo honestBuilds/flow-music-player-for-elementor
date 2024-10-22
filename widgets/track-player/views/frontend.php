@@ -47,21 +47,21 @@ $siteName = get_bloginfo('name');
 
 // Add this at the beginning of your frontend view
 // if ($use_blurred_background && $track_image_url) {
-//     echo '<div class="flow-audio-track-player-background fixed inset-0 bg-cover bg-center bg-no-repeat blur-3xl opacity-30" style="background-image: url(\'' . esc_url($track_image_url) . '\');"></div>';
+//     echo '<div class="fmp-track-player-background fixed inset-0 bg-cover bg-center bg-no-repeat blur-3xl opacity-30" style="background-image: url(\'' . esc_url($track_image_url) . '\');"></div>';
 // }
 // if ($use_blurred_background && $featured_image) {
-//     echo '<div class="flow-audio-track-player fixed inset-0 bg-cover bg-center bg-no-repeat blur-3xl opacity-30" style="background-image: url(\'' . esc_url($featured_image) . '\');" data-track-metadata=\'' . $track_metadata_json . '\'>';
+//     echo '<div class="fmp-track-player fixed inset-0 bg-cover bg-center bg-no-repeat blur-3xl opacity-30" style="background-image: url(\'' . esc_url($featured_image) . '\');" data-track-metadata=\'' . $track_metadata_json . '\'>';
 // } else {
-//     echo '<div class="flow-audio-track-player" data-track-metadata="' . $track_metadata_json . '">';
+//     echo '<div class="fmp-track-player" data-track-metadata="' . $track_metadata_json . '">';
 // }
 ?>
 
 
-<div class="flow-audio-track-player" data-track-metadata='<?php echo esc_attr($track_metadata_json); ?>' data-audio-src="<?php echo esc_url($track_url); ?>" data-site-name="<?php echo esc_attr($siteName); ?>" data-post-id="<?php echo esc_attr(get_the_ID()); ?>"
+<div class="fmp-track-player" data-track-metadata='<?php echo esc_attr($track_metadata_json); ?>' data-audio-src="<?php echo esc_url($track_url); ?>" data-site-name="<?php echo esc_attr($siteName); ?>" data-post-id="<?php echo esc_attr(get_the_ID()); ?>"
     data-post-type="<?php echo esc_attr(get_post_type()); ?>">
     <?php if ($featured_image) : ?>
         <?php if ($use_blurred_background) : ?>
-            <div class="flow-audio-track-player-background bg-cover bg-center bg-no-repeat" style="background-image: url('<?php echo esc_url($featured_image); ?>');"></div>
+            <div class="fmp-track-player-background bg-cover bg-center bg-no-repeat" style="background-image: url('<?php echo esc_url($featured_image); ?>');"></div>
         <?php endif; ?>
 
         <?php if (isset($track_external_url) && !empty($track_external_url)) : ?>

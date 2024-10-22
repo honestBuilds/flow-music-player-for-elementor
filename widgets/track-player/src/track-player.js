@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mutations.forEach(function (mutation) {
             const addedNodes = mutation.addedNodes;
             for (let i = 0; i < addedNodes.length; i++) {
-                if (addedNodes[i].nodeType === 1 && addedNodes[i].classList.contains('flow-audio-track-player')) {
+                if (addedNodes[i].nodeType === 1 && addedNodes[i].classList.contains('fmp-track-player')) {
                     new AudioTrackPlayer(addedNodes[i]);
                 }
             }
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializePlayers() {
-    const players = document.querySelectorAll('.flow-audio-track-player');
+    const players = document.querySelectorAll('.fmp-track-player');
     players.forEach(player => new AudioTrackPlayer(player));
 }
 

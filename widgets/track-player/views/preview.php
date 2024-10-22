@@ -18,9 +18,9 @@
 
     var useBlurredBackground=settings.use_blurred_background==='yes' ;
     #>
-    <div class="flow-audio-track-player">
+    <div class="fmp-track-player">
         <# if (trackData.featured_image && useBlurredBackground) { #>
-            <div class="flow-audio-track-player-background bg-cover bg-center bg-no-repeat"
+            <div class="fmp-track-player-background bg-cover bg-center bg-no-repeat"
                 style="background-image: url('{{ trackData.featured_image }}');"
                 data-track-metadata='{{ JSON.stringify(trackData) }}'>
             </div>
