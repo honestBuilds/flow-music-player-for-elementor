@@ -510,6 +510,7 @@ jQuery(document).ready(function ($) {
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(shareText)
                     .then(() => {
+                        logShare();
                         alert('Share link copied to clipboard!');
                     })
                     .catch(err => {
@@ -532,6 +533,7 @@ jQuery(document).ready(function ($) {
             try {
                 const successful = document.execCommand('copy');
                 const msg = successful ? 'successful' : 'unsuccessful';
+                logShare();
                 alert('Share link copied to clipboard!');
             } catch (err) {
                 console.error('Fallback: Oops, unable to copy', err);

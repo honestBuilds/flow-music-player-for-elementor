@@ -155,6 +155,8 @@ class AudioTrackPlayer {
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(shareText)
                 .then(() => {
+                    this.logShare();
+
                     alert('Share link copied to clipboard!');
                 })
                 .catch(err => {
@@ -177,6 +179,7 @@ class AudioTrackPlayer {
         try {
             const successful = document.execCommand('copy');
             const msg = successful ? 'successful' : 'unsuccessful';
+            this.logShare();
             alert('Share link copied to clipboard!');
         } catch (err) {
             console.error('Fallback: Oops, unable to copy', err);
