@@ -2,11 +2,13 @@
 /*
 Plugin Name: Flow Music Player for Elementor
 Description: Music Player for Elementor: MP3 Audio Player & Podcast Player
-Version: 0.0.1
+Version: 0.0.2
 Author: Joseph Mills
 */
 
 namespace Flow_Music_Player_For_Elementor;
+
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 if (!defined('ABSPATH')) exit;
 
@@ -29,6 +31,7 @@ class FMP_For_Elementor
         $this->enqueue_scripts();
         $this->add_custom_widget_categories();
         $this->init_functionality();
+        $this->init_update_system();
     }
 
     private function set_version()
@@ -147,6 +150,12 @@ class FMP_For_Elementor
         require_once(__DIR__ . '/includes/admin-menu.php');
         require_once(__DIR__ . '/includes/share-tracking.php');
         require_once(__DIR__ . '/includes/share-data.php');
+    }
+
+    private function init_update_system()
+    {
+        require_once(__DIR__ . '/includes/updates.php');
+        add_action('init', 'initialize_flow_music_player_update_checker');
     }
 }
 
