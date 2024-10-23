@@ -128,6 +128,21 @@ class Album_Player_Content_Controls extends Controls_Manager
             ]
         );
 
+        $widget->add_control(
+            'playlist_location',
+            [
+                'label' => esc_html__('Location', 'flow-audio'),
+                'type' => Controls_Manager::TEXT,
+                'placeholder' => esc_html__('Enter location', 'flow-audio'),
+                'dynamic' => [
+                    'active' => true, // Enable dynamic tags
+                ],
+                'condition' => [
+                    'album_source' => 'manual',
+                ],
+            ]
+        );
+
         // Cover Art Control (Image Field outside repeater)
         $widget->add_control(
             'cover_art',

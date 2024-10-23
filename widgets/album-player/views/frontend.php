@@ -52,6 +52,9 @@
                     alt="Cover Art"></div>
 
                 <h1 class="album-title text-2xl font-bold mt-11"><?php echo esc_html($playlist_title); ?></h1>
+                <?php if (!empty($playlist_location)): ?>
+                    <p class="album-location no-mbe font-bold"><?php echo esc_html($playlist_location); ?></p>
+                <?php endif; ?>
                 <p class="artist-name no-mbe"><?php echo esc_html($playlist_artist); ?></p>
                 <p class="album-info no-mbe"><?php echo esc_html(ucfirst($playlist_type)) .  (empty($playlist_year) ? '' : ' • ' . esc_html($playlist_year)); ?></p>
                 <?php

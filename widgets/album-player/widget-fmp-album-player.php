@@ -163,6 +163,7 @@ class FMP_Album_Player_Widget extends Widget_Base
             $playlist_title = '';
             $playlist_artist = '';
             $playlist_year = '';
+            $playlist_location = '';
             // Download Link
             $download_link = '';
             $total_duration = '';
@@ -193,13 +194,14 @@ class FMP_Album_Player_Widget extends Widget_Base
                 $playlist_title = $album_data['playlist_title'];
                 $playlist_artist = $album_data['playlist_artist'];
                 $playlist_year = $album_data['playlist_year'];
+                $playlist_location = $album_data['playlist_location'];
                 $cover_art_url = $album_data['cover_art'];
                 $tracks_arr = $album_data['tracks'];
                 $total_duration = $album_data['total_duration'];
                 $download_link = $album_data['download_link'];
             } else {
                 $playlist_data = $this->get_manual_album_data($post_id);
-
+                $playlist_location = $playlist_data['playlist_location'];
                 $playlist_title = $playlist_data['playlist_title'];
                 $playlist_artist = $playlist_data['playlist_artist'];
                 $playlist_year = $playlist_data['playlist_year'];
@@ -219,6 +221,7 @@ class FMP_Album_Player_Widget extends Widget_Base
                     'year' => $playlist_year,
                     'coverArt' => $cover_art_url,
                     'tracks' => $tracks_arr,
+                    'location' => $playlist_location,
                     'playButtonImage' => plugin_dir_url(__FILE__) . 'src/play-btn.svg',
                     'pauseButtonImage' => plugin_dir_url(__FILE__) . 'src/pause-btn.svg',
                     'downloadLink' => $download_link,
@@ -301,6 +304,7 @@ class FMP_Album_Player_Widget extends Widget_Base
             'playlist_title' => $album->post_title,
             'playlist_artist' => $album_artist,
             'playlist_year' => strval(get_post_meta($album_id, 'album_year', true)),
+            'playlist_location' => strval(get_post_meta($album_id, 'album_location', true)),
             'cover_art' => $cover_art_url ? $cover_art_url : Utils::get_placeholder_image_src(),
             'tracks' => $formatted_tracks,
             'total_duration' => format_audio_duration($total_dur_secs),
@@ -335,6 +339,7 @@ class FMP_Album_Player_Widget extends Widget_Base
             'playlist_title' => $settings['playlist_title'],
             'playlist_artist' => $settings['playlist_artist'],
             'playlist_year' => $settings['playlist_year'],
+            'playlist_location' => $settings['playlist_location'],
             'cover_art' => $settings['cover_art']['url'] ?? Utils::get_placeholder_image_src(),
             'tracks' => $tracks,
             'total_duration' => format_audio_duration($total_dur_secs),

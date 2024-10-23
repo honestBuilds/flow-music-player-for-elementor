@@ -91,9 +91,12 @@ use Elementor\Utils;
                         alt="Cover Art"></div>
 
                     <h1 class="album-title text-2xl font-bold mt-11">{{ albumData.playlist_title }}</h1>
-                    <p class="text-gray-400 artist-name no-mbe">{{ albumData.playlist_artist }}</p>
-                    <p class="text-gray-400 album-info no-mbe">{{ albumData.playlist_type }} • {{ albumData.playlist_year }}</p>
-                    <p class="text-gray-400 album-stats no-mbe">{{ albumData.track_count }} {{ albumData.track_count === 1 ? 'track' : 'tracks' }} • {{ albumData.total_duration }}</p>
+                    <# if (albumData.playlist_location) { #>
+                        <p class="album-location no-mbe font-bold">{{ albumData.playlist_location }}</p>
+                    <# } #>
+                    <p class="artist-name no-mbe">{{ albumData.playlist_artist }}</p>
+                    <p class="album-info no-mbe">{{ albumData.playlist_type }} • {{ albumData.playlist_year }}</p>
+                    <p class="album-stats no-mbe">{{ albumData.track_count }} {{ albumData.track_count === 1 ? 'track' : 'tracks' }} • {{ albumData.total_duration }}</p>
 
                     <!-- Controls -->
                     <div class="flex space-x-4 mt-4 justify-center items-center">

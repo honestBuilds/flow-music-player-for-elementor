@@ -56,6 +56,12 @@ function register_album_post_type_and_meta()
             'single' => true,
             'show_in_rest' => true,
         ),
+        'album_location' => array(
+            'type' => 'string',
+            'description' => 'Album Location',
+            'single' => true,
+            'show_in_rest' => true,
+        ),
         'album_download_link' => array(
             'type' => 'string',
             'description' => 'Album Download Link',
@@ -202,6 +208,12 @@ function save_album_meta_box_data($post_id)
         update_post_meta($post_id, 'album_year', $year);
     }
 
+    // Save Location
+    if (isset($_POST['album_location'])) {
+        $location = sanitize_text_field($_POST['album_location']);
+        update_post_meta($post_id, 'album_location', $location);
+    }
+
     // Save Download Link
     if (isset($_POST['album_download_link'])) {
         $download_link = esc_url_raw($_POST['album_download_link']);
@@ -231,10 +243,14 @@ function album_details_meta_box_callback($post)
 
     // Retrieve existing values
     $year = get_post_meta($post->ID, 'album_year', true);
+    $location = get_post_meta($post->ID, 'album_location', true);
     $download_link = get_post_meta($post->ID, 'album_download_link', true);
 
     echo '<p><label for="album_year">' . __('Year', 'flow-elementor-widgets') . '</label></p>';
     echo '<input type="text" id="album_year" name="album_year" value="' . esc_attr($year) . '" size="25" />';
+
+    echo '<p><label for="album_location">' . __('Location', 'flow-elementor-widgets') . '</label></p>';
+    echo '<input type="text" id="album_location" name="album_location" value="' . esc_attr($location) . '" size="25" />';
 
     // Made the Download Link field longer by adding a style
     echo '<p><label for="album_download_link">' . __('Download Link', 'flow-elementor-widgets') . '</label></p>';
