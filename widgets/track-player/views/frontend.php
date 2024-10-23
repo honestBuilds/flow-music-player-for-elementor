@@ -79,7 +79,9 @@ $siteName = get_bloginfo('name');
     <div class="track-content z-index-10">
         <div class="track-info">
             <div class="track-details">
-                <div class="track-title"><?php echo esc_html($track_title); ?></div>
+                <a href="<?php echo esc_url(get_permalink()); ?>">
+                    <div class="track-title"><?php echo esc_html($track_title); ?></div>
+                </a>
                 <div class="track-artist"><?php echo esc_html($track_artist); ?></div>
             </div>
             <button class="play-pause-btn"></button>
