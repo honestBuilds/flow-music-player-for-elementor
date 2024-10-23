@@ -5,26 +5,18 @@ require_once(__DIR__ . '/../vendor/plugin-update-checker/plugin-update-checker.p
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 
-// Define environment constant
-if (!defined('FLOW_MUSIC_PLAYER_ENV')) {
-    define('FLOW_MUSIC_PLAYER_ENV', (defined('WP_DEBUG') && WP_DEBUG) ? 'development' : 'production');
-}
-
 function initialize_flow_music_player_update_checker()
 {
     $myUpdateChecker = PucFactory::buildUpdateChecker(
         'https://github.com/honestBuilds/flow-music-player-for-elementor/releases',
         __FILE__,
-        'flow-music-player-for-elementor'
+        'flow-music-player-for-elementor',
+        24
     );
 
-    $myUpdateChecker->setBranch('release');
+    // $myUpdateChecker->getVcsApi()->enableReleaseAssets();
+    // $myUpdateChecker->setBranch('release');
 
-    if (FLOW_MUSIC_PLAYER_ENV === 'production') {
-        $myUpdateChecker->setCheckPeriod(24); // Check every 24 hours in production
-    } else {
-        $myUpdateChecker->setCheckPeriod(1); // Check every hour in development
-    }
 
     // Store the update checker instance in a global variable
     $GLOBALS['flow_music_player_update_checker'] = $myUpdateChecker;
