@@ -2,7 +2,7 @@
 /*
 Plugin Name: Flow Music Player for Elementor
 Description: Music Player for Elementor: MP3 Audio Player & Podcast Player
-Version: 0.0.2
+Version: 0.0.3
 Author: Joseph Mills
 */
 
