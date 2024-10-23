@@ -9,7 +9,7 @@ function initialize_flow_music_player_update_checker()
 {
     $myUpdateChecker = PucFactory::buildUpdateChecker(
         'https://github.com/honestBuilds/flow-music-player-for-elementor/releases',
-        __FILE__,
+        FLOW_MUSIC_PLAYER_FILE,
         'flow-music-player-for-elementor',
         24
     );
@@ -26,6 +26,8 @@ function initialize_flow_music_player_update_checker()
 
     // Add action to handle the update check
     add_action('admin_post_flow_music_player_check_update', 'flow_music_player_check_update');
+
+    return $myUpdateChecker;
 }
 
 
