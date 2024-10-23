@@ -2,8 +2,8 @@
    Contributors: josephmills
    Tags: music, player, elementor
    Requires at least: 5.0
-   Tested up to: 5.9
-   Stable tag: 0.0.3
+   Tested up to: 6.6
+   Stable tag: 0.1.0
    License: GPLv2 or later
    License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,7 +13,7 @@
    Flow Music Player for Elementor is a powerful and flexible music player plugin.
 
    == Changelog ==
-   = 0.0.3 =
+   = 0.1.0 =
    * Initial release
    * Album and Track player widgets for Elementor
    * Automatic updates
