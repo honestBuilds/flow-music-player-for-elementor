@@ -13,10 +13,12 @@ if (!defined('FLOW_MUSIC_PLAYER_ENV')) {
 function initialize_flow_music_player_update_checker()
 {
     $myUpdateChecker = PucFactory::buildUpdateChecker(
-        'https://api.github.com/repos/honestBuilds/flow-music-player-for-elementor/releases',
+        'https://github.com/honestBuilds/flow-music-player-for-elementor/releases',
         __FILE__,
         'flow-music-player-for-elementor'
     );
+
+    $myUpdateChecker->setBranch('release');
 
     if (FLOW_MUSIC_PLAYER_ENV === 'production') {
         $myUpdateChecker->setCheckPeriod(24); // Check every 24 hours in production
