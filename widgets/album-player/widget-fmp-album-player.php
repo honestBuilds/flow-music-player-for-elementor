@@ -295,7 +295,7 @@ class FMP_Album_Player_Widget extends Widget_Base
                 }
             }
         } else {
-            error_log("No tracks found or tracks data is not an array");
+            // error_log("No tracks found or tracks data is not an array");
         }
 
         $cover_art_url = get_the_post_thumbnail_url($album_id, 'full');
