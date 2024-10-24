@@ -8,3 +8,40 @@
     margin-top: 10px;
     display: block;
 }
+
+.track-album-wrapper {
+    margin: 15px 0;
+}
+
+#album_search {
+    width: 100%;
+    margin: 10px 0;
+}
+
+#album_search_results {
+    margin-top: 10px;
+}
+
+.album-search-result {
+    padding: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.album-item {
+    padding: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.remove-album {
+    background: #dc3232 !important;
+    color: white !important;
+    border-color: #dc3232 !important;
+}

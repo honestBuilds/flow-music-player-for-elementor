@@ -53,6 +53,7 @@ function register_track_post_type_and_meta()
         'track_url' => array('type' => 'string'),
         'track_download_link' => array('type' => 'string'),
         'track_external_url' => array('type' => 'string'),
+        'track_album' => array('type' => 'string'),
     );
 
     foreach ($meta_fields as $key => $args) {
@@ -76,6 +77,15 @@ function add_track_meta_boxes()
         'track_details',
         __('Track Details', 'flow-elementor-widgets'),
         'track_details_meta_box_callback',
+        'track',
+        'normal',
+        'high'
+    );
+
+    add_meta_box(
+        'track_album',
+        __('Album', 'flow-elementor-widgets'),
+        'track_album_meta_box_callback',
         'track',
         'normal',
         'high'
@@ -108,6 +118,32 @@ function track_details_meta_box_callback($post)
     echo '</div>';
 }
 
+function track_album_meta_box_callback($post)
+{
+    wp_nonce_field('track_album_meta_box', 'track_album_meta_box_nonce');
+
+    $track_album_id = get_post_meta($post->ID, 'track_album', true);
+
+    echo '<div class="track-album-wrapper">';
+
+    echo '<div id="album_container">';
+    if ($track_album_id) {
+        $album = get_post($track_album_id);
+        if ($album) {
+            echo '<div class="album-item" data-album-id="' . esc_attr($album->ID) . '">';
+            echo '<span>' . esc_html($album->post_title) . '</span>';
+            echo '<input type="hidden" name="track_album" value="' . esc_attr($album->ID) . '">';
+            echo '<button type="button" class="remove-album button">Remove</button>';
+            echo '</div>';
+        }
+    }
+    echo '</div>';
+
+    echo '<input type="text" id="album_search" placeholder="Search for albums...">';
+    echo '<div id="album_search_results"></div>';
+
+    echo '</div>';
+}
 // Enqueue scripts and styles
 function track_admin_scripts($hook)
 {
@@ -126,6 +162,15 @@ function track_admin_scripts($hook)
             filemtime($script_path),
             true
         );
+
+        wp_localize_script(
+            'track-admin-script',
+            'track_admin_vars',
+            array(
+                'nonce' => wp_create_nonce('track_album_nonce')
+            )
+        );
+
         wp_enqueue_style(
             'track-admin-style',
             plugin_dir_url(__FILE__) . 'src/track-admin.css',
@@ -139,12 +184,15 @@ add_action('admin_enqueue_scripts', 'track_admin_scripts');
 function save_track_meta_box_data($post_id)
 {
     // Check if our nonce is set.
-    if (!isset($_POST['track_details_meta_box_nonce'])) {
+    if (!isset($_POST['track_details_meta_box_nonce']) || !isset($_POST['track_album_meta_box_nonce'])) {
         return;
     }
 
     // Verify that the nonce is valid.
-    if (!wp_verify_nonce($_POST['track_details_meta_box_nonce'], 'track_details_meta_box')) {
+    if (
+        !wp_verify_nonce($_POST['track_details_meta_box_nonce'], 'track_details_meta_box') ||
+        !wp_verify_nonce($_POST['track_album_meta_box_nonce'], 'track_album_meta_box')
+    ) {
         return;
     }
 
@@ -191,9 +239,74 @@ function save_track_meta_box_data($post_id)
     } else {
         delete_post_meta($post_id, 'track_external_url');
     }
+
+    // Save Track Album
+    if (isset($_POST['track_album'])) {
+        $album_id = intval($_POST['track_album']);
+
+        // Get the old album ID if it exists
+        $old_album_id = get_post_meta($post_id, 'track_album', true);
+
+        // Remove track from old album if it exists
+        if ($old_album_id) {
+            $old_tracks = get_post_meta($old_album_id, 'album_tracks', true);
+            if (is_array($old_tracks)) {
+                $old_tracks = array_diff($old_tracks, array($post_id));
+                update_post_meta($old_album_id, 'album_tracks', $old_tracks);
+            }
+        }
+
+        // Add track to new album
+        if ($album_id > 0) {
+            update_post_meta($post_id, 'track_album', $album_id);
+
+            // Update album's tracks
+            $tracks = get_post_meta($album_id, 'album_tracks', true);
+            if (!is_array($tracks)) {
+                $tracks = array();
+            }
+            if (!in_array($post_id, $tracks)) {
+                $tracks[] = $post_id;
+                update_post_meta($album_id, 'album_tracks', $tracks);
+            }
+        }
+    } else {
+        delete_post_meta($post_id, 'track_album');
+    }
 }
 
 add_action('save_post_track', 'save_track_meta_box_data');
+
+// AJAX handler for album search
+function search_albums_callback()
+{
+    check_ajax_referer('track_album_nonce', 'nonce');
+
+    $query = sanitize_text_field($_GET['query']);
+    $args = array(
+        'post_type' => 'album',
+        'post_status' => 'publish',
+        's' => $query,
+        'posts_per_page' => 10
+    );
+
+    $albums = get_posts($args);
+
+    if ($albums) {
+        foreach ($albums as $album) {
+            echo '<div class="album-search-result">';
+            echo '<span>' . esc_html($album->post_title) . '</span>';
+            echo '<button type="button" class="add-album button" data-album-id="' . esc_attr($album->ID) . '" data-album-title="' . esc_attr($album->post_title) . '">Add</button>';
+            echo '</div>';
+        }
+    } else {
+        echo '<div class="album-search-result">No albums found.</div>';
+    }
+
+    wp_die();
+}
+add_action('wp_ajax_search_albums', 'search_albums_callback');
+
 
 // Artist Taxonomy
 require_once('artist-taxonomy.php');
