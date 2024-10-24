@@ -14,15 +14,18 @@ function initialize_flow_music_player_update_checker()
         24
     );
 
+    // Configure it to use GitHub releases
     // $myUpdateChecker->getVcsApi()->enableReleaseAssets();
-    // $myUpdateChecker->setBranch('release');
+
+    // Set GitHub as the host
+    $myUpdateChecker->setAuthentication(''); // Add your GitHub token here if repo is private
 
 
     // Store the update checker instance in a global variable
     $GLOBALS['flow_music_player_update_checker'] = $myUpdateChecker;
 
     // Add filter to modify plugin action links
-    add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'flow_music_player_add_check_update_link');
+    add_filter('plugin_action_links_' . plugin_basename(FLOW_MUSIC_PLAYER_FILE), 'flow_music_player_add_check_update_link');
 
     // Add action to handle the update check
     add_action('admin_post_flow_music_player_check_update', 'flow_music_player_check_update');

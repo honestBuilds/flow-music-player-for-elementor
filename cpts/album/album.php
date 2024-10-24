@@ -88,10 +88,7 @@ function register_album_post_type_and_meta()
 // Sanitize callback for tracks
 function sanitize_album_tracks($tracks)
 {
-    album_error_log('Sanitizing tracks: ' . print_r($tracks, true));
-
     if (!is_array($tracks)) {
-        album_error_log('Tracks is not an array. Converting to array.');
         $tracks = array($tracks);
     }
 
@@ -103,7 +100,6 @@ function sanitize_album_tracks($tracks)
         }
     }
 
-    album_error_log('Sanitized tracks: ' . print_r($sanitized_tracks, true));
     return $sanitized_tracks;
 }
 
@@ -221,19 +217,13 @@ function save_album_meta_box_data($post_id)
     }
 
     // Save Tracks
-    album_error_log('Saving tracks for post ID: ' . $post_id);
-    album_error_log('POST data: ' . print_r($_POST, true));
 
     if (isset($_POST['tracks'])) {
         $tracks = sanitize_album_tracks($_POST['tracks']);
         $update_result = update_post_meta($post_id, 'album_tracks', $tracks);
-        album_error_log('Update result: ' . ($update_result ? 'success' : 'failure'));
     } else {
-        album_error_log('No tracks data found. Deleting meta.');
         delete_post_meta($post_id, 'album_tracks');
     }
-
-    album_error_log('Finished saving album meta data');
 }
 
 function album_details_meta_box_callback($post)
@@ -262,10 +252,8 @@ function album_tracks_meta_box_callback($post)
     wp_nonce_field('album_tracks_meta_box', 'album_tracks_meta_box_nonce');
 
     $tracks = get_post_meta($post->ID, 'album_tracks', true);
-    album_error_log('Retrieved tracks for post ID ' . $post->ID . ': ' . print_r($tracks, true));
 
     if (!is_array($tracks)) {
-        album_error_log('Tracks is not an array. Setting to empty array.');
         $tracks = array();
     }
 
