@@ -19,5 +19,9 @@
    * Automatic updates
    * Sharing log
 
-    = 0.1.1 =
-    * [FIX] update system
+   = 0.1.1 =
+   * [FIX] update system
+
+   = 0.1.3 =
+   * [FEAT] Automatically add tracks to albums
+   * [FIX] Album title width overflow on desktop and tablet
