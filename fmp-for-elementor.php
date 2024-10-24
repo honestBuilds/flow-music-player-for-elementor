@@ -3,13 +3,12 @@
 Plugin Name: Flow Music Player for Elementor
 Plugin URI: https://github.com/honestBuilds/flow-music-player-for-elementor
 Description: Music Player for Elementor: MP3 Audio Player & Podcast Player
-Version: 0.1.3
+Version: 0.1.4
 Author: Joseph Mills
 Author URI: https://github.com/josephomills
-Requires at least: 5.0
+Requires at least: 6.3
 Tested up to: 6.6
-Update URI: https://github.com/honestBuilds/flow-music-player-for-elementor/releases
-Requires PHP: 7.2
+Requires PHP: 7.4
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
@@ -163,10 +162,7 @@ class FMP_For_Elementor
     private function init_update_system()
     {
         require_once(__DIR__ . '/includes/updates.php');
-        add_action('init', function () {
-            $update_checker = initialize_flow_music_player_update_checker();
-            // You can do additional setup with $update_checker here if needed
-        });
+        add_action('init', 'initialize_flow_music_player_update_checker');
     }
 }
 

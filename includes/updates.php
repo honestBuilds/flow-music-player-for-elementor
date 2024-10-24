@@ -8,64 +8,9 @@ use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 function initialize_flow_music_player_update_checker()
 {
     $myUpdateChecker = PucFactory::buildUpdateChecker(
-        'https://github.com/honestBuilds/flow-music-player-for-elementor/releases',
+        'https://github.com/honestBuilds/flow-music-player-for-elementor/',
         FLOW_MUSIC_PLAYER_FILE,
         'flow-music-player-for-elementor',
         24
     );
-
-    // $myUpdateChecker->getVcsApi()->enableReleaseAssets();
-    // $myUpdateChecker->setBranch('release');
-
-
-    // Store the update checker instance in a global variable
-    $GLOBALS['flow_music_player_update_checker'] = $myUpdateChecker;
-
-    // Add filter to modify plugin action links
-    add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'flow_music_player_add_check_update_link');
-
-    // Add action to handle the update check
-    add_action('admin_post_flow_music_player_check_update', 'flow_music_player_check_update');
-
-    return $myUpdateChecker;
-}
-
-
-function flow_music_player_add_check_update_link($links)
-{
-    $check_update_url = add_query_arg(
-        array(
-            'action' => 'flow_music_player_check_update',
-            '_wpnonce' => wp_create_nonce('flow_music_player_check_update'),
-        ),
-        admin_url('admin-post.php')
-    );
-
-    $check_update_link = sprintf(
-        '<a href="%s">%s</a>',
-        esc_url($check_update_url),
-        __('Check for Updates', 'flow-music-player')
-    );
-
-    array_unshift($links, $check_update_link);
-    return $links;
-}
-
-function flow_music_player_check_update()
-{
-    if (!current_user_can('update_plugins')) {
-        wp_die(__('You do not have sufficient permissions to update plugins for this site.', 'flow-music-player'));
-    }
-
-    check_admin_referer('flow_music_player_check_update');
-
-    $update_checker = $GLOBALS['flow_music_player_update_checker'];
-    $update_checker->checkForUpdates();
-
-    if (isset($_GET['redirect'])) {
-        wp_safe_redirect($_GET['redirect']);
-    } else {
-        wp_safe_redirect(admin_url('plugins.php'));
-    }
-    exit;
 }
