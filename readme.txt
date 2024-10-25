@@ -3,16 +3,18 @@
    Tags: music, player, elementor
    Requires at least: 5.0
    Tested up to: 6.6
-   Stable tag: 0.1.4
+   Stable tag: 0.1.6
    License: GPLv2 or later
    License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
    Music Player for Elementor: MP3 Audio Player & Podcast Player
 
    == Description ==
+
    Flow Music Player for Elementor is a powerful and flexible music player plugin.
 
    == Installation ==
+
    = Minimum Requirements =
    * WordPress 6.3 or greater
    * PHP version 7.4 or greater
@@ -24,6 +26,7 @@
    * Click Install Now and then activate the plugin
 
    == Changelog ==
+
    = 0.1.4 - 2024-10-24 =
    * New: Dashboard link on plugins page
    * Tweak: Updated plugin docs

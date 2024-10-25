@@ -279,7 +279,7 @@ class FMP_Album_Player_Widget extends Widget_Base
                 if ($track_post) {
                     $track_file_url = get_post_meta($track_id, 'track_url', true);
                     $track_attachment_id = attachment_url_to_postid($track_file_url) ?? 0;
-                    $audio_duration = get_audio_length($track_attachment_id);
+                    $audio_duration = get_audio_length($track_attachment_id > 0 ? $track_attachment_id : $track_file_url);
                     $total_dur_secs += $audio_duration;
 
                     $formatted_tracks[] = [
@@ -321,8 +321,8 @@ class FMP_Album_Player_Widget extends Widget_Base
 
         foreach ($settings['tracks'] as $track) {
             $track_file_url = $track['media_library']['url'] ?? '';
-            $track_attachment_id = $track['media_library']['id'] ?? '';
-            $audio_duration = get_audio_length($track_attachment_id);
+            $track_attachment_id = $track['media_library']['id'] ?? 0;
+            $audio_duration = get_audio_length($track_attachment_id > 0 ? $track_attachment_id : $track_file_url);
             $total_dur_secs += $audio_duration;
 
             $tracks[] = [
