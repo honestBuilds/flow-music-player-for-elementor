@@ -1,7 +1,7 @@
    === Flow Music Player for Elementor ===
    Contributors: josephmills, Xybron
    Tags: music, player, elementor
-   Requires at least: 5.0
+   Requires at least: 6.3
    Tested up to: 6.6
    Stable tag: 0.1.6
    License: GPLv2 or later
@@ -33,8 +33,8 @@
    = 0.1.4 - 2024-10-24 =
    * New: Dashboard link on plugins page
    * Tweak: Updated plugin docs
-   * Tweak: Bumped PHP version to 7.4
-   * Tweak: Bumped WordPress version to 6.3
+   * Tweak: Bumped min PHP version to 7.4
+   * Tweak: Bumped min WordPress version to 6.3
    * Fix: Check for updates 406 error
 
    = 0.1.3 - 2024-10-23 =

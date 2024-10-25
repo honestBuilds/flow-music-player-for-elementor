@@ -1,1 +1,25 @@
+# Development files
 widgets/audio_track_player/views/fix.html
+
+# IDE/Editor files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+
+# Logs
+*.log
+
+# Dependencies - DON'T ignore vendor
+!vendor/
+!vendor/*
+
+# Cache and temporary files
+*.cache
+*.tmp
+
+# Development/Build tools
+node_modules/
+.sass-cache/
+.env
