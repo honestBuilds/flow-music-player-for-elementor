@@ -31,12 +31,6 @@ function register_artist_taxonomy()
 }
 add_action('init', 'register_artist_taxonomy', 0);
 
-function add_artist_taxonomy_image_support()
-{
-    register_taxonomy_for_object_type('artist', 'attachment');
-}
-add_action('init', 'add_artist_taxonomy_image_support');
-
 function artist_taxonomy_add_image_field($taxonomy)
 {
 ?>
