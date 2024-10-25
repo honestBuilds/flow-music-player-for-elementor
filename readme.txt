@@ -3,7 +3,7 @@
    Tags: music, player, elementor
    Requires at least: 6.3
    Tested up to: 6.6
-   Stable tag: 0.1.9
+   Stable tag: 0.2.0
    License: GPLv2 or later
    License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,6 +26,9 @@
    * Click Install Now and then activate the plugin
 
    == Changelog ==
+   = 0.1.9 - 2024-10-25 =
+   * New: Tracks are re-orderable on album admin page
+   
    = 0.1.9 - 2024-10-25 =
    * Fix: Artist taxonomy on Media
    * Fix: Audio duration error on unattached audio files
