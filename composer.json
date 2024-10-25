@@ -2,6 +2,7 @@
     "require": {
         "james-heinrich/getid3": "^1.9",
         "geoip2/geoip2": "~2.0",
-        "yahnis-elsts/plugin-update-checker": "^5.5"
+        "yahnis-elsts/plugin-update-checker": "^5.5",
+        "maxmind-db/reader": "~1.0"
     }
 }
