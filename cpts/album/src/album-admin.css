@@ -9,8 +9,33 @@
     padding: 10px;
     margin-bottom: 10px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    cursor: move;
+    gap: 10px;
+}
+
+
+.track-grip {
+    color: #999;
+    cursor: move;
+    flex: 0 0 20px;
+}
+
+/* Make grip more visible on hover */
+.track-item:hover .track-grip {
+    color: #666;
+}
+
+.track-item span:not(.track-grip) {
+    flex: 1;
+    min-width: 0;
+    margin-right: auto;
+}
+
+/* Style the track title */
+.track-header .track-title {
+    flex-grow: 1;
+    margin-right: 10px;
 }
 
 /* Track header */
@@ -24,11 +49,7 @@
     border-bottom: 1px solid #ddd;
 }
 
-/* Style the track title */
-.track-header .track-title {
-    flex-grow: 1;
-    margin-right: 10px;
-}
+
 
 /* Style the toggle icon */
 .track-header .toggle-icon {
@@ -66,6 +87,7 @@
     background-color: #dc3545 !important;
     color: white !important;
     border: none !important;
+    flex: 0 0 auto;
 }
 
 /* Make the track file input, track title input, and download link wider */
@@ -111,4 +133,17 @@
 
 #add_new_track {
     margin-top: 10px;
+}
+
+/* Add these new styles */
+.ui-sortable-helper {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0.9;
+}
+
+.ui-sortable-placeholder {
+    visibility: visible !important;
+    background: #f0f0f0;
+    border: 2px dashed #ccc;
 }

@@ -136,6 +136,7 @@ function album_admin_scripts($hook)
 
     if (('post.php' == $hook || 'post-new.php' == $hook) && 'album' === $post_type) {
         wp_enqueue_media();
+        wp_enqueue_script('jquery-ui-sortable');
 
         $script_path = plugin_dir_path(__FILE__) . 'src/album-admin.js';
         $style_path = plugin_dir_path(__FILE__) . 'src/album-admin.css';
@@ -264,7 +265,8 @@ function album_tracks_meta_box_callback($post)
         $track = get_post($track_id);
         if ($track) {
             echo '<div class="track-item" data-track-id="' . esc_attr($track_id) . '">';
-            echo '<span>' . esc_html($track->post_title) . '</span>';
+            echo '<span class="track-grip dashicons dashicons-menu"></span>';
+            echo '<span class="track-title">' . esc_html($track->post_title) . '</span>';
             echo '<input type="hidden" name="tracks[]" value="' . esc_attr($track_id) . '">';
             echo '<button type="button" class="remove-track button">Remove</button>';
             echo '</div>';

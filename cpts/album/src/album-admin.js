@@ -135,6 +135,28 @@ jQuery(document).ready(function ($) {
         trackIndex = newTrackIndex;
     }
 
+    $('#tracks_container').sortable({
+        items: '.track-item',  // Add this to specify what can be sorted
+        cursor: 'move',
+        update: function (event, ui) {
+            // After sorting, update the hidden input values to match the new order
+            var tracks = [];
+            $('#tracks_container .track-item').each(function () {
+                var trackId = $(this).data('track-id');
+                if (trackId) {
+                    tracks.push(trackId);
+                }
+            });
+
+            // Update hidden inputs to match new order
+            $('#tracks_container .track-item input[name="tracks[]"]').remove();
+            tracks.forEach(function (trackId) {
+                $('#tracks_container .track-item[data-track-id="' + trackId + '"]')
+                    .append('<input type="hidden" name="tracks[]" value="' + trackId + '">');
+            });
+        }
+    });
+
     // Event listener for the "Add Track" button
     $('#add-track').on('click', function (e) {
         e.preventDefault();
@@ -146,6 +168,8 @@ jQuery(document).ready(function ($) {
         var trackItem = $(this);
         attachTrackEventListeners(trackItem);
     });
+
+
 
     var trackSearchTimeout;
 
