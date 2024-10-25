@@ -26,7 +26,10 @@
    * Click Install Now and then activate the plugin
 
    == Changelog ==
-
+   = 0.1.6 - 2024-10-25 =
+   * Fix: Artist taxonomy on Media
+   * Fix: Audio duration error on unattached audio files
+   
    = 0.1.4 - 2024-10-24 =
    * New: Dashboard link on plugins page
    * Tweak: Updated plugin docs
