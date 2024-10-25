@@ -3,7 +3,7 @@
    Tags: music, player, elementor
    Requires at least: 6.3
    Tested up to: 6.6
-   Stable tag: 0.1.6
+   Stable tag: 0.1.7
    License: GPLv2 or later
    License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,9 +26,10 @@
    * Click Install Now and then activate the plugin
 
    == Changelog ==
-   = 0.1.6 - 2024-10-25 =
+   = 0.1.7 - 2024-10-25 =
    * Fix: Artist taxonomy on Media
    * Fix: Audio duration error on unattached audio files
+   * Fix: .gitignore excluding some files
    
    = 0.1.4 - 2024-10-24 =
    * New: Dashboard link on plugins page
