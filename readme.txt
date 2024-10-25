@@ -26,7 +26,7 @@
    * Click Install Now and then activate the plugin
 
    == Changelog ==
-   = 0.1.9 - 2024-10-25 =
+   = 0.2.0 - 2024-10-25 =
    * New: Tracks are re-orderable on album admin page
    
    = 0.1.9 - 2024-10-25 =
