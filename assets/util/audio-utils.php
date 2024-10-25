@@ -27,36 +27,40 @@ function format_audio_duration($seconds)
 /**
  * Get the length of the given track in seconds
  * 
- * @param Array $track
+ * @param $source
  * @return int
  */
-function get_audio_length($attachment_id)
+function get_audio_length($source)
 {
-    // Initialize total length
-    $total_length = 0;
-
-    // Instantiate getID3 object
-    $getID3 = new getID3();
-
-
-    // Get the audio file info
-    $file_info = $getID3->analyze(get_attached_file($attachment_id));
-    $getID3->CopyTagsToComments($file_info);
-
-    // Check if duration is available
-    if (isset($file_info['playtime_seconds'])) {
-        $total_length += (int)$file_info['playtime_seconds'];
+    if (is_numeric($source)) {
+        $file_path = get_attached_file($source);
+    } else {
+        // Convert URL to server path
+        $site_url = rtrim(site_url(), '/');
+        $site_path = rtrim(ABSPATH, '/');
+        $file_path = urldecode(str_replace($site_url, $site_path, $source));
     }
 
+    // Check if file exists
+    if (!file_exists($file_path)) {
+        error_log('Audio file not found: ' . $file_path);
+        return 0;
+    }
 
-    return $total_length;
+    // Analyze file with getID3
+    $getID3 = new getID3();
+    try {
+        $file_info = $getID3->analyze($file_path);
+        return isset($file_info['playtime_seconds']) ? (int)$file_info['playtime_seconds'] : 0;
+    } catch (Exception $e) {
+        error_log('Error analyzing audio file: ' . $e->getMessage());
+        return 0;
+    }
 }
 
-function get_total_duration($secs) {}
-
-function get_formatted_audio_length($attachment_id)
+function get_formatted_audio_length($source)
 {
-    return format_audio_duration(get_audio_length($attachment_id));
+    return format_audio_duration(get_audio_length($source));
 }
 
 /**

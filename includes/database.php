@@ -4,8 +4,6 @@ function fmp_create_database_tables()
     global $wpdb;
     $table_name = $wpdb->prefix . 'fmp_share_log';
 
-    error_log("Attempting to create or update table: $table_name");
-
     $charset_collate = $wpdb->get_charset_collate();
 
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
@@ -21,12 +19,11 @@ function fmp_create_database_tables()
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     $result = dbDelta($sql);
 
-    error_log("dbDelta result: " . print_r($result, true));
 
-    if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
-        error_log("Failed to create table: $table_name");
-        error_log("Last SQL error: " . $wpdb->last_error);
-    } else {
-        error_log("Table $table_name created successfully or already exists");
-    }
+    // if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+    //     error_log("Failed to create table: $table_name");
+    //     error_log("Last SQL error: " . $wpdb->last_error);
+    // } else {
+    //     error_log("Table $table_name created successfully or already exists");
+    // }
 }
