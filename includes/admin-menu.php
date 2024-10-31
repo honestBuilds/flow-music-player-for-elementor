@@ -83,13 +83,25 @@ function fmp_main_page()
     );
     $albums = get_posts($args);
 
-    // Start output buffering for CSV download
+    // Handle CSV download
     if (isset($_POST['download_csv'])) {
-        header('Content-Type: text/csv');
+        // Clear any previous output
+        ob_clean();
+
+        // Set headers for CSV download
+        header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename="albums.csv"');
+
+        // Create output stream
         $output = fopen('php://output', 'w');
+
+        // Add UTF-8 BOM for Excel compatibility
+        fputs($output, "\xEF\xBB\xBF");
+
+        // Write headers
         fputcsv($output, array('#', 'Album Title', 'Number of Tracks'));
 
+        // Write album data
         foreach ($albums as $index => $album) {
             $tracks = get_posts(array(
                 'post_type' => 'track',
@@ -103,20 +115,22 @@ function fmp_main_page()
             ));
             fputcsv($output, array($index + 1, $album->post_title, count($tracks)));
         }
+
         fclose($output);
-        exit;
+        exit();
     }
 
     // Regular page display
-    echo '<div class="wrap">';
-    echo '<h1>Flow Music Player</h1>';
-    echo '<p>Welcome to the Flow Music Player plugin.</p>';
+?>
+    <div class="wrap">
+        <h1>Flow Music Player</h1>
+        <p>Welcome to the Flow Music Player plugin.</p>
 
-    echo '<form method="post">';
-    echo '<button type="submit" name="download_csv" class="button button-primary">Download Albums CSV</button>';
-    echo '</form>';
-
-    echo '</div>';
+        <form method="post">
+            <button type="submit" name="download_csv" class="button button-primary">Download Albums CSV</button>
+        </form>
+    </div>
+<?php
 }
 
 function fmp_share_dashboard_page()
