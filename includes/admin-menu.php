@@ -74,7 +74,49 @@ function fmp_reorder_cpt_menus()
 
 function fmp_main_page()
 {
-    echo '<div class="wrap"><h1>Flow Music Player</h1><p>Welcome to the Flow Music Player plugin.</p></div>';
+    // Get all albums
+    $args = array(
+        'post_type' => 'album',
+        'posts_per_page' => -1,
+        'orderby' => 'title',
+        'order' => 'ASC'
+    );
+    $albums = get_posts($args);
+
+    // Start output buffering for CSV download
+    if (isset($_POST['download_csv'])) {
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="albums.csv"');
+        $output = fopen('php://output', 'w');
+        fputcsv($output, array('#', 'Album Title', 'Number of Tracks'));
+
+        foreach ($albums as $index => $album) {
+            $tracks = get_posts(array(
+                'post_type' => 'track',
+                'posts_per_page' => -1,
+                'meta_query' => array(
+                    array(
+                        'key' => 'album',
+                        'value' => $album->ID
+                    )
+                )
+            ));
+            fputcsv($output, array($index + 1, $album->post_title, count($tracks)));
+        }
+        fclose($output);
+        exit;
+    }
+
+    // Regular page display
+    echo '<div class="wrap">';
+    echo '<h1>Flow Music Player</h1>';
+    echo '<p>Welcome to the Flow Music Player plugin.</p>';
+
+    echo '<form method="post">';
+    echo '<button type="submit" name="download_csv" class="button button-primary">Download Albums CSV</button>';
+    echo '</form>';
+
+    echo '</div>';
 }
 
 function fmp_share_dashboard_page()
