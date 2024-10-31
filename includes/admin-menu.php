@@ -103,17 +103,11 @@ function fmp_main_page()
 
         // Write album data
         foreach ($albums as $index => $album) {
-            $tracks = get_posts(array(
-                'post_type' => 'track',
-                'posts_per_page' => -1,
-                'meta_query' => array(
-                    array(
-                        'key' => 'album',
-                        'value' => $album->ID
-                    )
-                )
-            ));
-            fputcsv($output, array($index + 1, $album->post_title, count($tracks)));
+            // Get tracks array from album post meta
+            $tracks_array = get_post_meta($album->ID, 'album_tracks', true);
+            $num_tracks = is_array($tracks_array) ? count($tracks_array) : 0;
+
+            fputcsv($output, array($index + 1, $album->post_title, $num_tracks));
         }
 
         fclose($output);
