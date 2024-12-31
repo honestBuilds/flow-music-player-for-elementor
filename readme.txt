@@ -3,7 +3,7 @@
    Tags: music, player, elementor
    Requires at least: 6.3
    Tested up to: 6.6
-   Stable tag: 0.2.3
+   Stable tag: 0.3.0
    License: GPLv2 or later
    License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,6 +26,9 @@
    * Click Install Now and then activate the plugin
 
    == Changelog ==
+   = 0.2.3 - 2024-10-31 =
+   * New: Freemius integration
+
    = 0.2.3 - 2024-10-31 =
    * Fix: Albums CSV not returning number of tracks
 

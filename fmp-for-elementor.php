@@ -19,6 +19,53 @@ if (!defined('ABSPATH')) exit;
 
 define('FLOW_MUSIC_PLAYER_FILE', __FILE__);
 
+if (function_exists('fmp_fremius')) {
+    fmp_fremius()->set_basename(true, __FILE__);
+} else {
+    if (! function_exists('fmp_fremius')) {
+        // Create a helper function for easy SDK access.
+        function fmp_fremius()
+        {
+            global $fmp_fremius;
+
+            if (! isset($fmp_fremius)) {
+                // Include Freemius SDK.
+                require_once dirname(__FILE__) . '/freemius/start.php';
+
+                $fmp_fremius = fs_dynamic_init(array(
+                    'id'                  => '17477',
+                    'slug'                => 'flow-music-player-for-elementor',
+                    'premium_slug'        => 'flow-music-player-for-elementor-pro',
+                    'type'                => 'plugin',
+                    'public_key'          => 'pk_80d7b75033081ed8c4a8f732d1af6',
+                    'is_premium'          => true,
+                    'premium_suffix'      => 'Pro',
+                    // If your plugin is a serviceware, set this option to false.
+                    'has_premium_version' => true,
+                    'has_addons'          => false,
+                    'has_paid_plans'      => true,
+                    'trial'               => array(
+                        'days'               => 14,
+                        'is_require_payment' => true,
+                    ),
+                    'menu'                => array(
+                        'slug'           => 'flow-music-player',
+                        'support'        => false,
+                    ),
+                ));
+            }
+
+            return $fmp_fremius;
+        }
+
+        // Init Freemius.
+        fmp_fremius();
+        // Signal that SDK was initiated.
+        do_action('fmp_fremius_loaded');
+    }
+}
+
+
 class FMP_For_Elementor
 {
     private $version;
