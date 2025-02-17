@@ -2,8 +2,8 @@
    Contributors: josephmills, Xybron
    Tags: music, player, elementor
    Requires at least: 6.3
-   Tested up to: 6.6
-   Stable tag: 0.3.0
+   Tested up to: 6.7.2
+   Stable tag: 0.4.0
    License: GPLv2 or later
    License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,11 +22,15 @@
    = Installation =
    * Go to the Add New plugins screen in your WordPress admin area
    * Click the upload tab
-   * Browse for the plugin file (flow-music-player-for-elementor.zip)
+   * Browse for the plugin file (flow-music-player-for-elementor[-pro].zip)
    * Click Install Now and then activate the plugin
 
    == Changelog ==
-   = 0.2.3 - 2024-10-31 =
+    = 0.4.0 - 2025-02-17 =
+   * New: Album categories
+   * New: Track categories
+
+   = 0.3.0 - 2024-10-31 =
    * New: Freemius integration
 
    = 0.2.3 - 2024-10-31 =

@@ -3,11 +3,11 @@
 Plugin Name: Flow Music Player for Elementor
 Plugin URI: https://github.com/honestBuilds/flow-music-player-for-elementor
 Description: Music Player for Elementor: MP3 Audio Player & Podcast Player
-Version: 0.2.3
+Version: 0.4.0
 Author: Joseph Mills
 Author URI: https://github.com/josephomills
 Requires at least: 6.3
-Tested up to: 6.6
+Tested up to: 6.7.2
 Requires PHP: 7.4
 License: GPL v2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -61,7 +61,7 @@ if (function_exists('fmp_fremius')) {
         // Init Freemius.
         fmp_fremius();
         // Signal that SDK was initiated.
-        do_action('fmp_fremius_loaded');
+        \do_action('fmp_fremius_loaded');
     }
 }
 
@@ -72,7 +72,7 @@ class FMP_For_Elementor
 
     public function __construct()
     {
-        add_action('plugins_loaded', array($this, 'init'), 20);
+        \add_action('plugins_loaded', array($this, 'init'), 20);
     }
 
     public function init()
@@ -90,23 +90,23 @@ class FMP_For_Elementor
 
     private function set_version()
     {
-        $plugin_data = get_file_data(__FILE__, array('Version' => 'Version'), false);
+        $plugin_data = \get_file_data(__FILE__, array('Version' => 'Version'), false);
         $this->version = $plugin_data['Version'];
     }
 
     public function update_db_check()
     {
-        $installed_version = get_option('fmp_version');
+        $installed_version = \get_option('fmp_version');
         if ($installed_version != $this->version) {
             $this->create_database_tables();
-            update_option('fmp_version', $this->version);
+            \update_option('fmp_version', $this->version);
         }
     }
 
     public function activate_plugin()
     {
         $this->create_database_tables();
-        update_option('fmp_version', $this->version);
+        \update_option('fmp_version', $this->version);
     }
 
 
@@ -119,7 +119,7 @@ class FMP_For_Elementor
     private function check_elementor_dependency()
     {
         if (!defined('ELEMENTOR_VERSION')) {
-            add_action('admin_notices', array($this, 'elementor_not_active_notice'));
+            \add_action('admin_notices', array($this, 'elementor_not_active_notice'));
             return;
         }
     }
@@ -131,7 +131,7 @@ class FMP_For_Elementor
 
     private function register_widgets()
     {
-        add_action('elementor/widgets/widgets_registered', array($this, 'register_flow_audio_widgets'));
+        \add_action('elementor/widgets/widgets_registered', array($this, 'register_flow_audio_widgets'));
     }
 
     public function register_flow_audio_widgets($widgets_manager)
@@ -149,7 +149,7 @@ class FMP_For_Elementor
 
     private function enqueue_scripts()
     {
-        add_action('wp_enqueue_scripts', array($this, 'fmp_enqueue_scripts'));
+        \add_action('wp_enqueue_scripts', array($this, 'fmp_enqueue_scripts'));
     }
 
     public function fmp_enqueue_scripts()
@@ -171,7 +171,7 @@ class FMP_For_Elementor
 
     private function add_custom_widget_categories()
     {
-        add_action('elementor/elements/categories_registered', array($this, 'add_custom_widget_categories_callback'));
+        \add_action('elementor/elements/categories_registered', array($this, 'add_custom_widget_categories_callback'));
     }
 
     public function add_custom_widget_categories_callback($elements_manager)
@@ -179,7 +179,7 @@ class FMP_For_Elementor
         $elements_manager->add_category(
             'flow',
             [
-                'title' => esc_html__('Flow', 'flow'),
+                'title' => \esc_html__('Flow', 'flow'),
                 'icon' => 'fa-cross',
             ]
         );
@@ -188,8 +188,8 @@ class FMP_For_Elementor
     private function init_functionality()
     {
         // Ajax handler for logging shares
-        add_action('wp_ajax_fmp_log_share', 'fmp_log_share');
-        add_action('wp_ajax_nopriv_fmp_log_share', 'fmp_log_share');
+        \add_action('wp_ajax_fmp_log_share', 'fmp_log_share');
+        \add_action('wp_ajax_nopriv_fmp_log_share', 'fmp_log_share');
     }
 
     private function load_required_files()
@@ -209,7 +209,7 @@ class FMP_For_Elementor
     private function init_update_system()
     {
         require_once(__DIR__ . '/includes/updates.php');
-        add_action('init', 'initialize_flow_music_player_update_checker');
+        \add_action('init', 'initialize_flow_music_player_update_checker');
     }
 }
 

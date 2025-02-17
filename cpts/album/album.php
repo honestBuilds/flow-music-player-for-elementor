@@ -30,7 +30,7 @@ function register_album_post_type_and_meta()
         'public'             => true,
         'has_archive'        => true,
         'rewrite'            => array('slug' => 'album'),
-        'supports'           => array('title', 'thumbnail'),
+        'supports'           => array('title', 'thumbnail', 'category'),
         'show_in_menu'       => true,
         'show_ui'            => true,
         'show_in_rest'       => true,
