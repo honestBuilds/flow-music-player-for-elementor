@@ -215,5 +215,5 @@ class FMP_For_Elementor
 
 // Initialize the plugin
 $fmp = new \Flow_Music_Player_For_Elementor\FMP_For_Elementor();
-// Register activation hook 
-register_activation_hook(__FILE__, array($fmp, 'activate_plugin'));
+// Register activation hook
+\register_activation_hook(__FILE__, array($fmp, 'activate_plugin'));

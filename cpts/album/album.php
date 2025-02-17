@@ -48,6 +48,8 @@ function register_album_post_type_and_meta()
 
     register_post_type('album', $args);
 
+    register_taxonomy_for_object_type('category', 'album');
+
     // Register Meta Fields
     $meta_fields = array(
         'album_year' => array(

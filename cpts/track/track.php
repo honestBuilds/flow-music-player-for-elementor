@@ -48,6 +48,8 @@ function register_track_post_type_and_meta()
 
     register_post_type('track', $args);
 
+    register_taxonomy_for_object_type('category', 'track');
+
     // Register Meta Fields
     $meta_fields = array(
         'track_url' => array('type' => 'string'),
