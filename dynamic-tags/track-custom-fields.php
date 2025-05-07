@@ -46,7 +46,22 @@ class Track_Custom_Field_Tag extends Tag
                     'track_url' => esc_html__('Track Audio File URL', 'flow-elementor-widgets'),
                     'track_download_link' => esc_html__('Track Download Link', 'flow-elementor-widgets'),
                     'track_external_url' => esc_html__('Track External URL', 'flow-elementor-widgets'),
+                    'track_index' => esc_html__('Track Index (for numbering)', 'flow-elementor-widgets'),
                 ],
+            ]
+        );
+
+        $this->add_control(
+            'starting_index',
+            [
+                'label' => esc_html__('Starting Index', 'flow-elementor-widgets'),
+                'type' => Controls_Manager::NUMBER,
+                'default' => 1,
+                'min' => 1,
+                'condition' => [
+                    'key' => 'track_index',
+                ],
+                'description' => esc_html__('Start numbering from this value', 'flow-elementor-widgets'),
             ]
         );
     }
@@ -55,12 +70,29 @@ class Track_Custom_Field_Tag extends Tag
     {
         $key = $this->get_settings('key');
         $post_id = get_the_ID();
+
         if ($post_id && $key) {
-            $value = get_post_meta($post_id, $key, true);
-            if (in_array($key, ['track_url', 'track_download_link', 'track_external_url'])) {
-                echo esc_url($value);
+            if ($key === 'track_index') {
+                // Get the starting index from settings
+                $starting_index = $this->get_settings('starting_index') ?: 1;
+
+                // For track_index, we need to get the current post index in the loop
+                global $wp_query;
+                if (isset($wp_query->current_post)) {
+                    $current_index = $wp_query->current_post + $starting_index;
+                    echo esc_html($current_index);
+                } else {
+                    // Fallback if not in a main query loop
+                    echo esc_html($starting_index);
+                }
             } else {
-                echo wp_kses_post($value);
+                // For regular post meta fields
+                $value = get_post_meta($post_id, $key, true);
+                if (in_array($key, ['track_url', 'track_download_link', 'track_external_url'])) {
+                    echo esc_url($value);
+                } else {
+                    echo wp_kses_post($value);
+                }
             }
         }
     }
