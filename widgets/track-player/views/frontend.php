@@ -82,7 +82,12 @@ $siteName = get_bloginfo('name');
                 <div class="track-title">
                     <a href="<?php echo esc_url(get_permalink()); ?>"><?php echo esc_html($track_title); ?></a>
                 </div>
-                <div class="track-artist"><?php echo esc_html($track_artist); ?></div>
+                <div class="track-artist-line">
+                    <span class="track-artist"><?php echo esc_html($track_artist); ?></span>
+                    <?php if (isset($settings['show_track_number']) && $settings['show_track_number'] === 'yes' && !empty($settings['track_list_number_input'])) : ?>
+                        <span class="fmp-track-list-number">(<?php echo esc_html($settings['track_list_number_input']); ?>)</span>
+                    <?php endif; ?>
+                </div>
             </div>
             <button class="play-pause-btn"></button>
         </div>

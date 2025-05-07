@@ -34,7 +34,12 @@
                             <div class="track-info">
                                 <div class="track-details">
                                     <div class="track-title">{{{ trackData.track_title }}}</div>
-                                    <div class="track-artist">{{{ trackData.track_artist }}}</div>
+                                    <div class="track-artist-line">
+                                        <span class="track-artist">{{{ trackData.track_artist }}}</span>
+                                        <# if (settings.show_track_number==='yes' && settings.track_list_number_input) { #>
+                                            <span class="fmp-track-list-number">({{{ settings.track_list_number_input }}})</span>
+                                            <# } #>
+                                    </div>
                                 </div>
                                 <button class="play-pause-btn"></button>
                             </div>

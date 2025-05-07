@@ -198,6 +198,46 @@ class Track_Player_Content_Controls extends Controls_Manager
         );
 
         $widget->end_controls_section();
+
+        // Add Track Numbering Section
+        $widget->start_controls_section(
+            'section_numbering',
+            [
+                'label' => esc_html__('Track Numbering', 'flow-audio'),
+                'tab' => Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $widget->add_control(
+            'show_track_number',
+            [
+                'label' => esc_html__('Show Track Number', 'flow-audio'),
+                'type' => Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('Show', 'flow-audio'),
+                'label_off' => esc_html__('Hide', 'flow-audio'),
+                'return_value' => 'yes',
+                'default' => 'no',
+            ]
+        );
+
+        // This field will be used for both manual input and for dynamic tag population (like Post Index)
+        $widget->add_control(
+            'track_list_number_input',
+            [
+                'label' => esc_html__('Track Number', 'flow-audio'),
+                'type' => Controls_Manager::TEXT, // Using TEXT to easily accept dynamic tags
+                'placeholder' => esc_html__('e.g., 1 or {{post_index}}', 'flow-audio'),
+                'description' => esc_html__('Enter a number manually, or use a dynamic tag like "Post Index" when this widget is inside a loop.', 'flow-audio'),
+                'condition' => [
+                    'show_track_number' => 'yes',
+                ],
+                'dynamic' => [
+                    'active' => true, // Crucial for allowing dynamic tags
+                ],
+            ]
+        );
+
+        $widget->end_controls_section();
     }
 
     private function get_track_options()
