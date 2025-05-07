@@ -26,8 +26,9 @@
    * Click Install Now and then activate the plugin
 
    == Changelog ==
-   = 0.5.0 - 2025-05-7 =
+   = 0.5.1 - 2025-05-7 =
    * New: Track (player) numbering when listing tracks
+   * New: Track index custom field
 
    = 0.4.1 - 2025-02-17 =
    * New: Album categories
