@@ -12,6 +12,12 @@ if (!defined('ABSPATH')) {
 
 class Track_Custom_Field_Tag extends Tag
 {
+    // Static counter for tracking position
+    private static $instance_counter = 0;
+
+    // Store already rendered track indices to avoid double counting
+    private static $rendered_tracks = [];
+
     public function get_name()
     {
         return 'track-custom-field';
@@ -66,6 +72,13 @@ class Track_Custom_Field_Tag extends Tag
         );
     }
 
+    // Reset the counter - can be called before a new query/page load
+    public static function reset_counter()
+    {
+        self::$instance_counter = 0;
+        self::$rendered_tracks = []; // Reset the rendered tracks array too
+    }
+
     public function render()
     {
         $key = $this->get_settings('key');
@@ -73,18 +86,41 @@ class Track_Custom_Field_Tag extends Tag
 
         if ($post_id && $key) {
             if ($key === 'track_index') {
-                // Get the starting index from settings
-                $starting_index = $this->get_settings('starting_index') ?: 1;
+                // Get the starting index from settings - ensure it's an integer
+                $starting_index = (int)($this->get_settings('starting_index') ?: 1);
 
-                // For track_index, we need to get the current post index in the loop
-                global $wp_query;
-                if (isset($wp_query->current_post)) {
-                    $current_index = $wp_query->current_post + $starting_index;
-                    echo esc_html($current_index);
-                } else {
-                    // Fallback if not in a main query loop
-                    echo esc_html($starting_index);
+                // Get a unique identifier for this track instance
+                $instance_id = $post_id . '_' . $this->get_id();
+
+                // Check if we've already processed this track
+                if (isset(self::$rendered_tracks[$instance_id])) {
+                    // Return the previously assigned number
+                    echo esc_html(self::$rendered_tracks[$instance_id]);
+                    return;
                 }
+
+                // For debugging
+                // error_log('Processing track: ' . $instance_id . ', Counter before: ' . self::$instance_counter);
+
+                // For the very first track, use starting_index exactly
+                // For subsequent tracks, increment from there
+                if (self::$instance_counter === 0) {
+                    $current_index = $starting_index;
+                } else {
+                    $current_index = $starting_index + self::$instance_counter;
+                }
+
+                // Store the track's assigned number for future reference
+                self::$rendered_tracks[$instance_id] = $current_index;
+
+                // Increment the counter for the next track
+                self::$instance_counter++;
+
+                // Output the track number
+                echo esc_html($current_index);
+
+                // For debugging
+                // error_log('Assigned index: ' . $current_index . ', Counter after: ' . self::$instance_counter);
             } else {
                 // For regular post meta fields
                 $value = get_post_meta($post_id, $key, true);

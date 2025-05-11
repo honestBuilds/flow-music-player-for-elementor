@@ -40,6 +40,16 @@ function add_track_custom_fields_to_elementor($dynamic_tags_manager)
 }
 add_action('elementor/dynamic_tags/register', __NAMESPACE__ . '\\add_track_custom_fields_to_elementor');
 
+// Reset counter at the beginning of page render
+function reset_track_index_counter()
+{
+    if (class_exists('\\Flow_Widgets_For_Elementor\\Dynamic_Tags\\Track_Custom_Field_Tag')) {
+        Track_Custom_Field_Tag::reset_counter();
+    }
+}
+add_action('wp_head', __NAMESPACE__ . '\\reset_track_index_counter', 1);
+add_action('elementor/editor/before_enqueue_scripts', __NAMESPACE__ . '\\reset_track_index_counter', 1);
+
 // Register album custom fields
 function add_album_custom_fields_to_elementor($dynamic_tags_manager)
 {

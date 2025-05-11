@@ -3,7 +3,7 @@
 Plugin Name: Flow Music Player for Elementor
 Plugin URI: https://github.com/honestBuilds/flow-music-player-for-elementor
 Description: Music Player for Elementor: MP3 Audio Player & Podcast Player
-Version: 0.5.1
+Version: 0.8.0
 Author: Joseph Mills
 Author URI: https://github.com/josephomills
 Requires at least: 6.3
