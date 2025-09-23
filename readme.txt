@@ -26,7 +26,7 @@
    * Click Install Now and then activate the plugin
 
    == Changelog ==
-   = 1.0.0 - 2025-09-23 =
+   = 1.0.1 - 2025-09-23 =
    * Fix: Changed "No tracks found" message
 
    = 0.8.0 - 2025-05-7 =

@@ -131,7 +131,7 @@
                             </li>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p>No tracks found.</p>
+                        <p>You can ONLY download this album at the moment with the download buttons. We are working to make the tracks playable online soon.</p>
                     <?php endif; ?>
                 </ul>
             </div>
