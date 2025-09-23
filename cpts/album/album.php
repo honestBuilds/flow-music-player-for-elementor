@@ -305,7 +305,7 @@ function search_tracks_callback()
             echo '</div>';
         }
     } else {
-        echo '<div class="track-search-result">No tracks found.</div>';
+        echo "<div class='track-search-result'>You can ONLY download this album at the moment with the download buttons. We're working to make the tracks playable online soon.</div>";
     }
 
     wp_die();
