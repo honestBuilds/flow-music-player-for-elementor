@@ -129,3 +129,48 @@ function fmp_render_share_count_meta_box($post)
     $share_count = fmp_get_share_count($post->ID);
     echo "<p>This post has been shared $share_count times.</p>";
 }
+
+// Make the 'Shares' column sortable
+add_filter('manage_edit-track_sortable_columns', 'fmp_make_share_count_column_sortable');
+add_filter('manage_edit-album_sortable_columns', 'fmp_make_share_count_column_sortable');
+
+function fmp_make_share_count_column_sortable($columns)
+{
+    $columns['share_count'] = 'share_count';
+    return $columns;
+}
+
+// Modify the main query to handle sorting by share count
+add_action('pre_get_posts', 'fmp_sort_by_share_count');
+
+function fmp_sort_by_share_count($query)
+{
+    if (!is_admin() || !$query->is_main_query()) {
+        return;
+    }
+
+    if ($query->get('orderby') === 'share_count') {
+        add_filter('posts_join', 'fmp_share_count_posts_join', 10, 2);
+        add_filter('posts_orderby', 'fmp_share_count_posts_orderby', 10, 2);
+    }
+}
+
+function fmp_share_count_posts_join($join, $query)
+{
+    if ($query->get('orderby') === 'share_count') {
+        global $wpdb;
+        $table_name = $wpdb->prefix . 'fmp_share_log';
+        $join .= " LEFT JOIN (SELECT post_id, COUNT(*) as share_count FROM {$table_name} GROUP BY post_id) as shares ON {$wpdb->posts}.ID = shares.post_id";
+    }
+    return $join;
+}
+
+function fmp_share_count_posts_orderby($orderby, $query)
+{
+    if ($query->get('orderby') === 'share_count') {
+        global $wpdb;
+        $order = $query->get('order') ?: 'DESC';
+        $orderby = "shares.share_count " . $order;
+    }
+    return $orderby;
+}

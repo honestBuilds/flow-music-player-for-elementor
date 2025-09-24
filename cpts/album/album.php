@@ -76,6 +76,13 @@ function register_album_post_type_and_meta()
             'single' => true,
             'show_in_rest' => true,
         ),
+        '_album_track_count' => array(
+            'type' => 'integer',
+            'description' => 'The number of tracks in the album.',
+            'single' => true,
+            'show_in_rest' => true,
+            'default' => 0,
+        ),
     );
 
     foreach ($meta_fields as $key => $args) {
@@ -223,9 +230,11 @@ function save_album_meta_box_data($post_id)
 
     if (isset($_POST['tracks'])) {
         $tracks = sanitize_album_tracks($_POST['tracks']);
-        $update_result = update_post_meta($post_id, 'album_tracks', $tracks);
+        update_post_meta($post_id, 'album_tracks', $tracks);
+        update_post_meta($post_id, '_album_track_count', count($tracks));
     } else {
         delete_post_meta($post_id, 'album_tracks');
+        update_post_meta($post_id, '_album_track_count', 0);
     }
 }
 
@@ -316,6 +325,62 @@ function album_error_log($message)
 {
     if (defined('WP_DEBUG') && WP_DEBUG === true) {
         error_log('Album CPT Error: ' . $message);
+    }
+}
+
+// Add custom columns to the album post type
+add_filter('manage_album_posts_columns', 'add_album_posts_columns');
+
+function add_album_posts_columns($columns)
+{
+    $new_columns = array();
+    foreach ($columns as $key => $value) {
+        if ($key === 'share_count') {
+            $new_columns['track_count'] = __('Tracks', 'flow-elementor-widgets');
+        }
+        $new_columns[$key] = $value;
+    }
+
+    // If 'shares' column is not present, just append it
+    if (!isset($columns['share_count'])) {
+        $new_columns['track_count'] = __('Tracks', 'flow-elementor-widgets');
+    }
+
+    return $new_columns;
+}
+
+// Populate the custom columns
+add_action('manage_album_posts_custom_column', 'add_album_posts_custom_column', 10, 2);
+
+function add_album_posts_custom_column($column, $post_id)
+{
+    if ($column == 'track_count') {
+        $track_count = get_post_meta($post_id, '_album_track_count', true);
+        echo $track_count ? $track_count : '0';
+    }
+}
+
+// Make the 'Tracks' column sortable
+add_filter('manage_edit-album_sortable_columns', 'make_track_count_column_sortable');
+
+function make_track_count_column_sortable($columns)
+{
+    $columns['track_count'] = 'track_count';
+    return $columns;
+}
+
+// Modify the main query to handle sorting by track count
+add_action('pre_get_posts', 'sort_by_track_count');
+
+function sort_by_track_count($query)
+{
+    if (!is_admin() || !$query->is_main_query()) {
+        return;
+    }
+
+    if ($query->get('orderby') === 'track_count') {
+        $query->set('meta_key', '_album_track_count');
+        $query->set('orderby', 'meta_value_num');
     }
 }
 

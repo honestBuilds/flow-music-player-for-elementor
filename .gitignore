@@ -20,3 +20,4 @@
 node_modules/
 .sass-cache/
 .env
+implementation_plan.md

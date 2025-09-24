@@ -3,7 +3,7 @@
 Plugin Name: Flow Music Player for Elementor
 Plugin URI: https://github.com/honestBuilds/flow-music-player-for-elementor
 Description: Music Player for Elementor: MP3 Audio Player & Podcast Player
-Version: 1.0.1
+Version: 1.0.4
 Author: Joseph Mills
 Author URI: https://github.com/josephomills
 Requires at least: 6.3
@@ -99,6 +99,7 @@ class FMP_For_Elementor
         $installed_version = \get_option('fmp_version');
         if ($installed_version != $this->version) {
             $this->create_database_tables();
+            $this->populate_existing_album_track_counts();
             \update_option('fmp_version', $this->version);
         }
     }
@@ -107,6 +108,23 @@ class FMP_For_Elementor
     {
         $this->create_database_tables();
         \update_option('fmp_version', $this->version);
+    }
+
+    public function populate_existing_album_track_counts()
+    {
+        $args = array(
+            'post_type' => 'album',
+            'posts_per_page' => -1,
+            'fields' => 'ids',
+        );
+
+        $album_ids = \get_posts($args);
+
+        foreach ($album_ids as $album_id) {
+            $tracks = \get_post_meta($album_id, 'album_tracks', true);
+            $track_count = is_array($tracks) ? count($tracks) : 0;
+            \update_post_meta($album_id, '_album_track_count', $track_count);
+        }
     }
 
 
