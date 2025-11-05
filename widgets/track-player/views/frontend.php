@@ -27,14 +27,9 @@ if ($settings['track_source'] === 'track_cpt') {
 $use_blurred_background = $settings['use_blurred_background'] === 'yes';
 $track_image_url = $track_data['featured_image_url'] ?? '';
 
-// Prepare the artist metadata
-$artist_metadata = !empty($track_artist)
-    ? "First Love Music ft. {$track_artist}"
-    : "First Love Music";
-
 $track_metadata = [
     'track_title' => $track_title,
-    'track_artist' => $artist_metadata,
+    'track_artist' => $track_artist,
     'album_title' => $track_data['album_title'] ?? '',
     'featured_image_url' => $featured_image,
     // ... any other relevant metadata ...
@@ -103,7 +98,7 @@ $siteName = get_bloginfo('name');
                     <?php if (isset($track_download_link) && !empty($track_download_link)) : ?>
                         <a href="<?php echo esc_url($track_download_link); ?>" target="_blank" class="download-link elementor-button-link">Download</a>
                     <?php endif; ?>
-                    <a href="<?php echo esc_url(get_permalink()); ?>" class="share-link elementor-button-link" data-track-title="<?php echo esc_attr($track_title); ?>" data-track-artist="<?php echo esc_attr($track_artist); ?>">Share</a>
+                    <a href="<?php echo esc_url(get_permalink()); ?>" class="share-link elementor-button-link">Share</a>
                 </div>
             </div>
 

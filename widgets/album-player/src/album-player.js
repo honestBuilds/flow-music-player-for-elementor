@@ -1,6 +1,16 @@
 jQuery(document).ready(function ($) {
     // Access albumData passed from PHP
-    if (typeof albumData !== 'undefined') {
+    // Access albumData passed from PHP
+    const albumPlayerElement = document.getElementById('fmp-album-player');
+    let albumMetadata = {};
+    try {
+        albumMetadata = JSON.parse(albumPlayerElement.dataset.albumMetadata);
+    } catch (error) {
+        console.error('Error parsing album metadata:', error);
+        console.log('Raw metadata:', albumPlayerElement.dataset.albumMetadata);
+    }
+
+    if (typeof albumData !== 'undefined') { // albumData is still used for other things, so keep this check
         console.log('Album Data:', albumData);
 
         const { title, artist, year, coverArt, tracks, playButtonImage, pauseButtonImage, totalDuration, downloadLink, siteName } = albumData;
@@ -390,12 +400,13 @@ jQuery(document).ready(function ($) {
         }
 
         function updateMediaSessionMetadata(index) {
+            const displayArtist = albumMetadata.album_artist || siteName;
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: trackList[index].title,
-                artist: artist,
-                album: title,
+                artist: displayArtist,
+                album: albumMetadata.album_title,
                 artwork: [{
-                    src: coverArt,
+                    src: albumMetadata.featured_image_url,
                     sizes: '512x512',
                     type: 'image/webp'
                 }]
@@ -483,29 +494,36 @@ jQuery(document).ready(function ($) {
         document.addEventListener('DOMContentLoaded', initializeButtonState);
 
         function shareAlbum() {
-            // e.preventDefault(); // Prevent the default link behavior
+            const albumTitle = albumMetadata.album_title;
+            const albumArtist = albumMetadata.album_artist;
+            const albumUrl = albumMetadata.album_url;
 
-            const shareText = artist ? `Listen to "${title}" by ${artist} on the ${siteName} website.` : `Listen to "${title}" on the ${siteName} website.`;
-            const shareTitle = artist ? `${title} by ${artist} - ${siteName}` : `${title} - ${siteName}`;
+            // Determine the artist to display. If album_artist is empty, use the site name.
+            const displayArtist = albumArtist || siteName;
+
+            const shareText = `Listen to "${albumTitle}" by ${displayArtist} on ${siteName}.`;
+            const shareTitle = `${albumTitle} by ${displayArtist}`;
 
             if (navigator.share) {
                 navigator.share({
                     title: shareTitle,
                     text: shareText,
-                    url: postUrl
+                    url: albumUrl
                 }).then(() => {
                     logShare();
                 }).catch((error) => {
                     console.error('Error sharing:', error);
-                    fallbackShare(title, artist, postUrl, siteName);
+                    fallbackShare(albumTitle, albumArtist, albumUrl, siteName);
                 });
             } else {
-                fallbackShare(title, artist, postUrl, siteName);
+                fallbackShare(albumTitle, albumArtist, albumUrl, siteName);
             }
         }
 
-        function fallbackShare(title, artist, url, siteName) {
-            const shareText = artist ? `Listen to "${title}" by ${artist} on the ${siteName} website: ${url}` : `Listen to "${title}" on the ${siteName} website: ${url}`;
+        function fallbackShare(albumTitle, albumArtist, albumUrl, siteName) {
+            // Determine the artist to display. If album_artist is empty, use the site name.
+            const displayArtist = albumArtist || siteName;
+            const shareText = `Listen to "${albumTitle}" by ${displayArtist}: ${albumUrl}`;
 
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(shareText)

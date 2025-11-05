@@ -127,11 +127,15 @@ class AudioTrackPlayer {
     shareTrack(e) {
         e.preventDefault(); // Prevent the default link behavior
 
-        const title = this.shareLink.dataset.trackTitle;
-        const artist = this.shareLink.dataset.trackArtist;
+        const title = this.trackMetadata.track_title;
+        const artist = this.trackMetadata.track_artist;
         const url = this.shareLink.href;
-        const shareText = artist ? `Listen to "${title}" by First Love Music ft. ${artist} on ${this.siteName}.` : `Listen to "${title}" by First Love Music on ${this.siteName}.`;
-        const shareTitle = artist ? `${title} by First Love Music ft. ${artist}` : `${title} by First Love Music`;
+
+        // Determine the artist to display. If track_artist is empty, use the site name.
+        const displayArtist = artist || this.siteName;
+
+        const shareText = `Listen to "${title}" by ${displayArtist} on ${this.siteName}.`;
+        const shareTitle = `${title} by ${displayArtist}`;
 
         if (navigator.share) {
             navigator.share({
@@ -150,7 +154,9 @@ class AudioTrackPlayer {
     }
 
     fallbackShare(title, artist, url) {
-        const shareText = artist ? `Listen to "${title}" by First Love Music ft. ${artist}: ${url}` : `Listen to "${title}" by First Love Music: ${url}`;
+        // Determine the artist to display. If track_artist is empty, use the site name.
+        const displayArtist = artist || this.siteName;
+        const shareText = `Listen to "${title}" by ${displayArtist}: ${url}`;
 
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(shareText)

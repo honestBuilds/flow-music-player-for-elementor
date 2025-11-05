@@ -1,4 +1,13 @@
-<div id="fmp-album-player" data-post-id="<?php echo esc_attr(get_the_ID()); ?>" data-post-type="<?php echo esc_attr(get_post_type()); ?>" data-post-url="<?php echo esc_url(get_permalink()); ?>">
+<?php
+$album_metadata = [
+    'album_title' => $playlist_title,
+    'album_artist' => $playlist_artist,
+    'featured_image_url' => $cover_art_url,
+    'album_url' => get_permalink(),
+];
+$album_metadata_json = json_encode($album_metadata, JSON_HEX_QUOT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_UNESCAPED_UNICODE);
+?>
+<div id="fmp-album-player" data-post-id="<?php echo esc_attr(get_the_ID()); ?>" data-post-type="<?php echo esc_attr(get_post_type()); ?>" data-post-url="<?php echo esc_url(get_permalink()); ?>" data-album-metadata='<?php echo esc_attr($album_metadata_json); ?>'>
 
     <!-- Floating Player -->
     <div id="floating-player" class="fixed bottom-0 left-0 right-0 flex flex-col z-20 shadow-lg text-white font-sans">

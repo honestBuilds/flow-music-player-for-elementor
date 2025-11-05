@@ -272,9 +272,10 @@ class FMP_Album_Player_Widget extends Widget_Base
 
         $formatted_tracks = [];
         $total_dur_secs = 0;
+        $track_counter = 1;
 
         if (!empty($tracks) && is_array($tracks)) {
-            foreach ($tracks as $index => $track_id) {
+            foreach ($tracks as $track_id) {
                 $track_post = get_post($track_id);
                 if ($track_post) {
                     $track_file_url = get_post_meta($track_id, 'track_url', true);
@@ -283,13 +284,14 @@ class FMP_Album_Player_Widget extends Widget_Base
                     $total_dur_secs += $audio_duration;
 
                     $formatted_tracks[] = [
-                        'track_number' => $index + 1,
+                        'track_number' => $track_counter,
                         'track_title' => $track_post->post_title,
                         'track_url' => $track_file_url,
                         'track_attachment_id' => $track_attachment_id,
                         'track_duration_secs' => $audio_duration,
                         'track_duration_formatted' => format_audio_duration($audio_duration),
                     ];
+                    $track_counter++;
                 } else {
                     error_log("Track not found for ID: " . $track_id);
                 }

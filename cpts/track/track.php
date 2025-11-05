@@ -254,7 +254,7 @@ function save_track_meta_box_data($post_id)
             $old_tracks = get_post_meta($old_album_id, 'album_tracks', true);
             if (is_array($old_tracks)) {
                 $old_tracks = array_diff($old_tracks, array($post_id));
-                update_post_meta($old_album_id, 'album_tracks', $old_tracks);
+                update_post_meta($old_album_id, 'album_tracks', array_values($old_tracks));
             }
         }
 
@@ -312,3 +312,20 @@ add_action('wp_ajax_search_albums', 'search_albums_callback');
 
 // Artist Taxonomy
 require_once('artist-taxonomy.php');
+
+function remove_track_from_album_on_delete($post_id)
+{
+    if (get_post_type($post_id) === 'track') {
+        $album_id = get_post_meta($post_id, 'track_album', true);
+
+        if ($album_id) {
+            $tracks = get_post_meta($album_id, 'album_tracks', true);
+
+            if (is_array($tracks)) {
+                $tracks = array_diff($tracks, array($post_id));
+                update_post_meta($album_id, 'album_tracks', array_values($tracks));
+            }
+        }
+    }
+}
+add_action('before_delete_post', 'remove_track_from_album_on_delete');

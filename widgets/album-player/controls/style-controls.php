@@ -132,6 +132,14 @@ class Album_Player_Style_Controls extends Controls_Manager
                     '{{WRAPPER}} .cover-art' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
                 'responsive' => true,
+                'default' => [
+                    'unit' => 'px',
+                    'top' => '',
+                    'right' => '',
+                    'bottom' => '',
+                    'left' => '',
+                    'isLinked' => true,
+                ],
             ]
         );
 

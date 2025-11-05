@@ -2,8 +2,8 @@
    Contributors: josephmills, Xybron
    Tags: music, player, elementor
    Requires at least: 6.3
-   Tested up to: 6.7.2
-   Stable tag: 1.0.4
+   Tested up to: 6.8.2
+   Stable tag: 1.1.0
    License: GPLv2 or later
    License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,6 +26,13 @@
    * Click Install Now and then activate the plugin
 
    == Changelog ==
+   = 1.1.0 - 2025-11-05 =
+   * Fix: Array error on album player
+   * Fix: Hardcoded artist name (FLM) on share
+
+   = 1.0.5 - 2025-09-25 =
+   * Fix: Track numbering on album player view
+
    = 1.0.4 - 2025-09-24 =
    * Tweak: Sortable 'Shares' column
    * New: 'Tracks' (track count) column on albums
